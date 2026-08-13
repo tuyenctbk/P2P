@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:aapt="http://schemas.android.com/aapt"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    
+    <!-- Outer connection rings representing local boundaries and secure perimeter -->
+    <path
+        android:pathData="M54,20 C35.22,20 20,35.22 20,54 C20,72.78 35.22,88 54,88 C72.78,88 88,72.78 88,54 C88,35.22 72.78,20 54,20 Z"
+        android:strokeWidth="1.5"
+        android:strokeLineCap="round">
+        <aapt:attr name="android:strokeColor">
+            <gradient
+                android:startX="20"
+                android:startY="20"
+                android:endX="88"
+                android:endY="88"
+                android:type="linear">
+                <item android:color="#4F46E5" android:offset="0.0" />
+                <item android:color="#06B6D4" android:offset="1.0" />
+            </gradient>
+        </aapt:attr>
+    </path>
+
+    <!-- Inner secondary ring with dashed pattern effect (simulated by dual path arcs) -->
+    <path
+        android:pathData="M54,28 A26,26 0 0,1 80,54 A26,26 0 0,1 54,80"
+        android:strokeWidth="1.0"
+        android:strokeColor="#334155" />
+    <path
+        android:pathData="M54,28 A26,26 0 0,0 28,54 A26,26 0 0,0 54,80"
+        android:strokeWidth="1.0"
+        android:strokeColor="#475569" />
+
+    <!-- Connection Mesh/Lines -->
+    <path
+        android:pathData="M38,40 L70,40 M38,40 L38,68 M38,68 L70,68 M70,40 L70,68 M38,40 L70,68 M38,68 L70,40"
+        android:strokeWidth="2.5"
+        android:strokeColor="#312E81" />
+    <path
+        android:pathData="M38,40 L70,40 M38,40 L38,68 M38,68 L70,68 M70,40 L70,68 M38,40 L70,68 M38,68 L70,40"
+        android:strokeWidth="1.2"
+        android:strokeLineCap="round">
+        <aapt:attr name="android:strokeColor">
+            <gradient
+                android:startX="38"
+                android:startY="40"
+                android:endX="70"
+                android:endY="68"
+                android:type="linear">
+                <item android:color="#818CF8" android:offset="0.0" />
+                <item android:color="#22D3EE" android:offset="1.0" />
+            </gradient>
+        </aapt:attr>
+    </path>
+
+    <!-- Central Node 1 (Peer A - Purple Glow) -->
+    <path
+        android:pathData="M38,40m-9,0a9,9 0 1,1 18,0a9,9 0 1,1 -18,0"
+        android:fillColor="#4F46E5" />
+    <path
+        android:pathData="M38,40m-5,0a5,5 0 1,1 10,0a5,5 0 1,1 -10,0"
+        android:fillColor="#C7D2FE" />
+
+    <!-- Central Node 2 (Peer B - Cyan Glow) -->
+    <path
+        android:pathData="M70,68m-9,0a9,9 0 1,1 18,0a9,9 0 1,1 -18,0"
+        android:fillColor="#0891B2" />
+    <path
+        android:pathData="M70,68m-5,0a5,5 0 1,1 10,0a5,5 0 1,1 -10,0"
+        android:fillColor="#CFFAFE" />
+
+    <!-- Central Node 3 (Peer C - Active Chat Bubble Intersection) -->
+    <path
+        android:pathData="M70,40m-7,0a7,7 0 1,1 14,0a7,7 0 1,1 -14,0"
+        android:fillColor="#1E293B" />
+    <path
+        android:pathData="M70,40m-4,0a4,4 0 1,1 8,0a4,4 0 1,1 -8,0"
+        android:fillColor="#EC4899" />
+
+    <!-- Central Node 4 (Peer D - Left-bottom node) -->
+    <path
+        android:pathData="M38,68m-7,0a7,7 0 1,1 14,0a7,7 0 1,1 -14,0"
+        android:fillColor="#1E293B" />
+    <path
+        android:pathData="M38,68m-4,0a4,4 0 1,1 8,0a4,4 0 1,1 -8,0"
+        android:fillColor="#10B981" />
+
+    <!-- Overlapping Secure P2P Chat Indicator Shield in Center -->
+    <path
+        android:pathData="M54,42 C58,42 61,45 61,49 C61,56 54,61 54,61 C54,61 47,56 47,49 C47,45 50,42 54,42 Z"
+        android:fillColor="#6366F1" />
+    <path
+        android:pathData="M54,45 M54,45 C55.5,45 57,46 57,48 C57,51.5 54,55 54,55 C54,55 51,51.5 51,48 C51,46 52.5,45 54,45 Z"
+        android:fillColor="#22D3EE" />
+
+</vector>

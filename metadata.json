@@ -1,0 +1,9 @@
+{
+  "name": "P2P Connect",
+  "description": "Secure local P2P chat and media sharing application",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
+
+
+
