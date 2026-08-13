@@ -73,24 +73,12 @@ fun HomeScreen(
             TopAppBar(
                 title = {
                     Row(verticalAlignment = Alignment.CenterVertically) {
-                        Icon(Icons.Default.Wifi, contentDescription = null, tint = MaterialTheme.colorScheme.primary)
+                        AppLogoFavicon()
                         Spacer(modifier = Modifier.width(8.dp))
                         Text("P2P Connect", fontWeight = FontWeight.Bold)
                     }
                 },
                 actions = {
-                    // Diagnostic Overlay Toggle Button
-                    IconButton(
-                        onClick = { viewModel.toggleDiagnosticOverlay() },
-                        modifier = Modifier.testTag("toggle_diagnostic_overlay_button")
-                    ) {
-                        Icon(
-                            imageVector = Icons.Default.Speed,
-                            contentDescription = "Toggle Diagnostic Overlay",
-                            tint = if (isOverlayVisible) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant
-                        )
-                    }
-
                     // Pairing Guide / Help Button
                     IconButton(
                         onClick = { showHowToDialog = true },
@@ -959,3 +947,76 @@ private fun parsePastedConnectionInfo(input: String): Pair<String, String>? {
     
     return null
 }
+
+@Composable
+fun AppLogoFavicon(
+    modifier: Modifier = Modifier
+) {
+    val primaryColor = MaterialTheme.colorScheme.primary
+    val secondaryColor = MaterialTheme.colorScheme.secondary
+    val tertiaryColor = MaterialTheme.colorScheme.tertiary
+    val outlineColor = MaterialTheme.colorScheme.outline
+    
+    androidx.compose.foundation.Canvas(
+        modifier = modifier
+            .size(24.dp)
+    ) {
+        val w = size.width
+        val h = size.height
+        val cx = w / 2f
+        val cy = h / 2f
+        
+        // 1. Draw outer ring path
+        drawCircle(
+            color = primaryColor.copy(alpha = 0.25f),
+            radius = w * 0.45f,
+            style = androidx.compose.ui.graphics.drawscope.Stroke(width = 1.5.dp.toPx())
+        )
+        
+        // 2. Draw connection mesh lines
+        val strokeW = 1.dp.toPx()
+        // Define node positions
+        val x1 = cx - w * 0.22f
+        val y1 = cy - h * 0.22f
+        
+        val x2 = cx + w * 0.22f
+        val y2 = cy + h * 0.22f
+        
+        val x3 = cx + w * 0.22f
+        val y3 = cy - h * 0.22f
+        
+        val x4 = cx - w * 0.22f
+        val y4 = cy + h * 0.22f
+        
+        // Mesh lines
+        drawLine(color = outlineColor.copy(alpha = 0.4f), start = androidx.compose.ui.geometry.Offset(x1, y1), end = androidx.compose.ui.geometry.Offset(x2, y2), strokeWidth = strokeW)
+        drawLine(color = outlineColor.copy(alpha = 0.4f), start = androidx.compose.ui.geometry.Offset(x3, y3), end = androidx.compose.ui.geometry.Offset(x4, y4), strokeWidth = strokeW)
+        drawLine(color = outlineColor.copy(alpha = 0.4f), start = androidx.compose.ui.geometry.Offset(x1, y1), end = androidx.compose.ui.geometry.Offset(x3, y3), strokeWidth = strokeW)
+        drawLine(color = outlineColor.copy(alpha = 0.4f), start = androidx.compose.ui.geometry.Offset(x1, y1), end = androidx.compose.ui.geometry.Offset(x4, y4), strokeWidth = strokeW)
+        drawLine(color = outlineColor.copy(alpha = 0.4f), start = androidx.compose.ui.geometry.Offset(x2, y2), end = androidx.compose.ui.geometry.Offset(x3, y3), strokeWidth = strokeW)
+        drawLine(color = outlineColor.copy(alpha = 0.4f), start = androidx.compose.ui.geometry.Offset(x2, y2), end = androidx.compose.ui.geometry.Offset(x4, y4), strokeWidth = strokeW)
+
+        // 3. Draw nodes
+        // Indigo node
+        drawCircle(color = primaryColor, radius = 2.5.dp.toPx(), center = androidx.compose.ui.geometry.Offset(x1, y1))
+        // Cyan node
+        drawCircle(color = androidx.compose.ui.graphics.Color(0xFF0891B2), radius = 2.5.dp.toPx(), center = androidx.compose.ui.geometry.Offset(x2, y2))
+        // Pink node
+        drawCircle(color = androidx.compose.ui.graphics.Color(0xFFEC4899), radius = 2.2.dp.toPx(), center = androidx.compose.ui.geometry.Offset(x3, y3))
+        // Green node
+        drawCircle(color = androidx.compose.ui.graphics.Color(0xFF10B981), radius = 2.2.dp.toPx(), center = androidx.compose.ui.geometry.Offset(x4, y4))
+        
+        // 4. Draw central shield/connection highlight
+        drawCircle(
+            color = primaryColor,
+            radius = 3.5.dp.toPx(),
+            center = androidx.compose.ui.geometry.Offset(cx, cy)
+        )
+        drawCircle(
+            color = androidx.compose.ui.graphics.Color(0xFF22D3EE),
+            radius = 1.75.dp.toPx(),
+            center = androidx.compose.ui.geometry.Offset(cx, cy)
+        )
+    }
+}
+
