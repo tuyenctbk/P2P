@@ -23,7 +23,7 @@
     <string name="scan_qr">סרוק QR</string>
     <string name="network_information">מידע רשת</string>
     <string name="data_management">ניהול נתונים</string>
-    <string name="auto_archive">ארכיון צ'אטים ישנים</string>
+    <string name="auto_archive">ארכיון צ\'אטים ישנים</string>
     <string name="clear_chat_history">נקה היסטוריה</string>
     <string name="cancel">ביטול</string>
     <string name="delete">מחק</string>

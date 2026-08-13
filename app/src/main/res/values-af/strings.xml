@@ -32,7 +32,7 @@
     <string name="schedule">Skedule</string>
     <string name="back">Terug</string>
     <string name="search_messages">Soek boodskappe...</string>
-    <string name="type_message">Tik 'n boodskap...</string>
+    <string name="type_message">Tik \'n boodskap...</string>
     <string name="send">Stuur</string>
     <string name="end_call">Beëindig Oproep</string>
 </resources>

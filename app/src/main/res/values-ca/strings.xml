@@ -24,7 +24,7 @@
     <string name="network_information">Informació de la xarxa</string>
     <string name="data_management">Gestió de dades</string>
     <string name="auto_archive">Arxiva xats antics</string>
-    <string name="clear_chat_history">Neteja l'historial</string>
+    <string name="clear_chat_history">Neteja l\'historial</string>
     <string name="cancel">Cancel·la</string>
     <string name="delete">Suprimeix</string>
     <string name="close">Tanca</string>

@@ -1,4 +1,6 @@
 import com.google.gms.googleservices.GoogleServicesPlugin.MissingGoogleServicesStrategy
+import java.util.Properties
+import java.io.FileInputStream
 
 plugins {
   alias(libs.plugins.android.application)
@@ -25,10 +27,12 @@ android {
 
   signingConfigs {
     create("release") {
-      val localProperties = java.util.Properties()
+      val localProperties = Properties()
       val localPropertiesFile = rootProject.file("local.properties")
       if (localPropertiesFile.exists()) {
-        localPropertiesFile.inputStream().use { localProperties.load(it) }
+        val stream = FileInputStream(localPropertiesFile)
+        localProperties.load(stream)
+        stream.close()
       }
 
       val storeFileName = localProperties.getProperty("RELEASE_STORE_FILE") ?: System.getenv("KEYSTORE_PATH") ?: "common_release_key.jks"

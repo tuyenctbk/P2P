@@ -4,10 +4,10 @@
     <string name="settings">Paramètres</string>
     <string name="blocked_users">Utilisateurs bloqués</string>
     <string name="profile_settings">Paramètres du profil</string>
-    <string name="display_nickname">Pseudonyme d'affichage</string>
+    <string name="display_nickname">Pseudonyme d\'affichage</string>
     <string name="save_nickname">Enregistrer le pseudo</string>
     <string name="privacy_and_security">Confidentialité et sécurité</string>
-    <string name="blocked_users_manager">Gestionnaire d'utilisateurs bloqués</string>
+    <string name="blocked_users_manager">Gestionnaire d\'utilisateurs bloqués</string>
     <string name="blocked_users_desc">Afficher et débloquer les pairs</string>
     <string name="preferences_and_feedback">Préférences</string>
     <string name="theme_style_mode">Mode de thème</string>
@@ -24,7 +24,7 @@
     <string name="network_information">Informations réseau</string>
     <string name="data_management">Gestion des données</string>
     <string name="auto_archive">Archivage automatique des anciens chats</string>
-    <string name="clear_chat_history">Effacer l'historique</string>
+    <string name="clear_chat_history">Effacer l\'historique</string>
     <string name="cancel">Annuler</string>
     <string name="delete">Supprimer</string>
     <string name="close">Fermer</string>
