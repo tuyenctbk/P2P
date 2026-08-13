@@ -18,7 +18,7 @@ interface ChatDao {
     fun searchMessages(query: String): Flow<List<ChatMessage>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertMessage(message: ChatMessage)
+    suspend fun insertMessage(message: ChatMessage): Long
 
     @Query("UPDATE chat_messages SET status = :status WHERE id = :id")
     suspend fun updateMessageStatus(id: Long, status: String)

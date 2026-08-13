@@ -330,16 +330,6 @@ fun ChatScreen(
                         ) {
                             Icon(Icons.Default.Videocam, contentDescription = "Start Video Call", tint = MaterialTheme.colorScheme.primary)
                         }
-                        IconButton(
-                            onClick = { viewModel.toggleBlockSelectedPeer() },
-                            modifier = Modifier.testTag("block_peer_button")
-                        ) {
-                            Icon(
-                                imageVector = if (uiState.isSelectedPeerBlocked) Icons.Default.CheckCircle else Icons.Default.Block,
-                                contentDescription = if (uiState.isSelectedPeerBlocked) "Unblock Peer" else "Block Peer",
-                                tint = if (uiState.isSelectedPeerBlocked) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.error
-                            )
-                        }
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(

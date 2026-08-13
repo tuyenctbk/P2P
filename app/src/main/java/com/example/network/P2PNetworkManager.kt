@@ -6,6 +6,7 @@ import android.util.Log
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
@@ -57,7 +58,7 @@ data class PeerPresenceInfo(
 )
 
 class P2PNetworkManager(private val context: Context) {
-    private val scope = CoroutineScope(Dispatchers.IO + Job())
+    private val scope = CoroutineScope(Dispatchers.IO + SupervisorJob())
 
     private val _incomingMessages = MutableSharedFlow<IncomingMessageEvent>()
     val incomingMessages: SharedFlow<IncomingMessageEvent> = _incomingMessages.asSharedFlow()
@@ -287,8 +288,8 @@ class P2PNetworkManager(private val context: Context) {
         val maxAttempts = 3
         while (attempts < maxAttempts) {
             attempts++
+            val socket = Socket()
             try {
-                val socket = Socket()
                 socket.connect(java.net.InetSocketAddress(targetIp, PORT), 2500)
                 val writer = PrintWriter(socket.getOutputStream(), true)
                 val reader = BufferedReader(InputStreamReader(socket.getInputStream()))
@@ -305,7 +306,6 @@ class P2PNetworkManager(private val context: Context) {
                 val payload = json.toString()
                 writer.println(payload)
                 val response = reader.readLine()
-                socket.close()
 
                 if (response == "ACK") {
                     _totalBytesSent.value += payload.length.toLong()
@@ -317,6 +317,8 @@ class P2PNetworkManager(private val context: Context) {
                 if (attempts < maxAttempts) {
                     kotlinx.coroutines.delay(300)
                 }
+            } finally {
+                try { socket.close() } catch (ignored: Exception) {}
             }
         }
         false
@@ -324,20 +326,23 @@ class P2PNetworkManager(private val context: Context) {
 
     suspend fun sendReadReceipt(targetIp: String, myName: String): Boolean = withContext(Dispatchers.IO) {
         if (targetIp == "GROUP" || targetIp == "127.0.0.2") return@withContext true
+        val socket = Socket()
         try {
-            val socket = Socket()
             socket.connect(java.net.InetSocketAddress(targetIp, PORT), 2000)
             val writer = PrintWriter(socket.getOutputStream(), true)
+            val reader = BufferedReader(InputStreamReader(socket.getInputStream()))
             val json = JSONObject().apply {
                 put("type", "READ_RECEIPT")
                 put("sender", myName)
                 put("timestamp", System.currentTimeMillis())
             }
             writer.println(json.toString())
-            socket.close()
+            reader.readLine() // consume ACK so server coroutine finishes
             true
         } catch (e: Exception) {
             false
+        } finally {
+            try { socket.close() } catch (ignored: Exception) {}
         }
     }
 
@@ -348,10 +353,11 @@ class P2PNetworkManager(private val context: Context) {
         reactionEmoji: String
     ): Boolean = withContext(Dispatchers.IO) {
         if (targetIp == "GROUP" || targetIp == "127.0.0.2") return@withContext true
+        val socket = Socket()
         try {
-            val socket = Socket()
             socket.connect(java.net.InetSocketAddress(targetIp, PORT), 2000)
             val writer = PrintWriter(socket.getOutputStream(), true)
+            val reader = BufferedReader(InputStreamReader(socket.getInputStream()))
             val json = JSONObject().apply {
                 put("type", "REACTION")
                 put("sender", myName)
@@ -359,10 +365,12 @@ class P2PNetworkManager(private val context: Context) {
                 put("reaction", reactionEmoji)
             }
             writer.println(json.toString())
-            socket.close()
+            reader.readLine() // consume ACK so server coroutine finishes
             true
         } catch (e: Exception) {
             false
+        } finally {
+            try { socket.close() } catch (ignored: Exception) {}
         }
     }
 
@@ -384,7 +392,7 @@ class P2PNetworkManager(private val context: Context) {
                 writer.println(json.toString())
                 val response = reader.readLine()
                 socket.close()
-                if (response == "ACK" || response != null) {
+                if (response == "ACK") {
                     return@withContext System.currentTimeMillis() - startTime
                 }
             } catch (e: Exception) {

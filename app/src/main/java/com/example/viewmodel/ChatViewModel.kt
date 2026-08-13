@@ -19,7 +19,7 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 data class ChatUiState(
-    val myName: String = "User_${(100..999).random()}",
+    val myName: String = "User",
     val localIp: String = "127.0.0.1",
     val selectedPeerAddress: String? = null,
     val selectedPeerName: String? = null,
@@ -108,13 +108,21 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
         val prefs = application.getSharedPreferences("p2p_prefs", Context.MODE_PRIVATE)
         _themeMode.value = prefs.getString("theme_mode", "SYSTEM") ?: "SYSTEM"
 
+        // Load or generate a stable display name from prefs
+        val savedName = prefs.getString("my_nickname", null)
+        if (savedName.isNullOrBlank()) {
+            val generatedName = "User_${(100..999).random()}"
+            prefs.edit().putString("my_nickname", generatedName).apply()
+            _uiState.value = _uiState.value.copy(myName = generatedName)
+        } else {
+            _uiState.value = _uiState.value.copy(myName = savedName)
+        }
+
         // Load blocked peers into P2PNetworkManager
         viewModelScope.launch {
             val blocked = chatDao.getAllPeersList().filter { it.isBlocked }.map { it.address }.toSet()
             p2pManager.setBlockedPeers(blocked)
         }
-
-        // Load auto archive preference
         val autoArchiveEnabled = prefs.getBoolean("auto_archive_enabled", false)
         _isAutoArchiveEnabled.value = autoArchiveEnabled
         if (autoArchiveEnabled) {
@@ -307,7 +315,10 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
 
     fun updateNickname(newName: String) {
         if (newName.isNotBlank()) {
-            _uiState.value = _uiState.value.copy(myName = newName.trim())
+            val trimmed = newName.trim()
+            _uiState.value = _uiState.value.copy(myName = trimmed)
+            val prefs = getApplication<Application>().getSharedPreferences("p2p_prefs", Context.MODE_PRIVATE)
+            prefs.edit().putString("my_nickname", trimmed).apply()
             broadcastPresence()
         }
     }
@@ -479,7 +490,7 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
 
                 val allPeers = chatDao.getAllPeersList()
                 for (peer in allPeers) {
-                    if (!peer.isBlocked) {
+                    if (!peer.isBlocked && peer.address != "GROUP" && peer.address != "127.0.0.2") {
                         p2pManager.sendMessage(peer.address, text.trim(), myName, attachmentType, attachmentData)
                     }
                 }
@@ -501,7 +512,7 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
                 attachmentType = attachmentType,
                 attachmentData = attachmentData
             )
-            chatDao.insertMessage(outgoingMsg)
+            val insertedId = chatDao.insertMessage(outgoingMsg)
 
             if (targetIp == "127.0.0.2") {
                 simulateBotReply(if (text.isBlank()) "Sent $attachmentType attachment" else text.trim())
@@ -510,8 +521,7 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
 
             val success = p2pManager.sendMessage(targetIp, text.trim(), myName, attachmentType, attachmentData)
             val updatedStatus = if (success) "DELIVERED" else "FAILED"
-            val deliveredMsg = outgoingMsg.copy(status = updatedStatus)
-            chatDao.insertMessage(deliveredMsg)
+            chatDao.updateMessageStatus(insertedId, updatedStatus)
         }
     }
 
@@ -697,7 +707,7 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
                 val allPeers = chatDao.getAllPeersList()
                 var anySent = false
                 for (peer in allPeers) {
-                    if (!peer.isBlocked) {
+                    if (!peer.isBlocked && peer.address != "GROUP" && peer.address != "127.0.0.2") {
                         val ok = p2pManager.sendMessage(peer.address, msg.text, myName, msg.attachmentType, msg.attachmentData)
                         if (ok) anySent = true
                     }
@@ -844,6 +854,7 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
 
     override fun onCleared() {
         super.onCleared()
+        audioNotifier.release()
         p2pManager.stop()
     }
 }
