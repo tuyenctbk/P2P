@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">P2P Connect</string>
+    <string name="settings">Ezarpenak</string>
+    <string name="blocked_users">Blokeatutako erabiltzaileak</string>
+    <string name="profile_settings">Profilaren ezarpenak</string>
+    <string name="display_nickname">Bistaratzeko izena</string>
+    <string name="save_nickname">Gorde ezizena</string>
+    <string name="privacy_and_security">Pribatutasuna eta segurtasuna</string>
+    <string name="blocked_users_manager">Blokeoen kudeatzailea</string>
+    <string name="blocked_users_desc">Ikusi eta desblokeatu</string>
+    <string name="preferences_and_feedback">Hobespenak</string>
+    <string name="theme_style_mode">Gai modua</string>
+    <string name="theme_system">Sistema</string>
+    <string name="theme_light">Argia</string>
+    <string name="theme_dark">Iluna</string>
+    <string name="notification_sounds">Jakinarazpen soinuak</string>
+    <string name="haptic_feedback">Vibrazioa</string>
+    <string name="battery_saver">P2P Bateria aurreztea</string>
+    <string name="diagnostic_overlay">Diagnostikoa</string>
+    <string name="profile_qr_pairing">Profilaren QR kodea</string>
+    <string name="share_qr">Partekatu QR</string>
+    <string name="scan_qr">Eskaneatu QR</string>
+    <string name="network_information">Sarearen informazioa</string>
+    <string name="data_management">Datuen kudeaketa</string>
+    <string name="auto_archive">Artxibatu txat zaharrak</string>
+    <string name="clear_chat_history">Garbitu historia</string>
+    <string name="cancel">Utzi</string>
+    <string name="delete">Ezabatu</string>
+    <string name="close">Itxi</string>
+    <string name="unblock">Desblokeatu</string>
+    <string name="schedule">Antolatu</string>
+    <string name="back">Atzera</string>
+    <string name="search_messages">Bilatu mezuak...</string>
+    <string name="type_message">Idatzi mezua...</string>
+    <string name="send">Bidali</string>
+    <string name="end_call">Amaitu deia</string>
+</resources>

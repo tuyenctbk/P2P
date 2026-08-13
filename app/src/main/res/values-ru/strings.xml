@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">P2P Connect</string>
+    <string name="settings">Настройки</string>
+    <string name="blocked_users">Заблокированные пользователи</string>
+    <string name="profile_settings">Настройки профиля</string>
+    <string name="display_nickname">Отображаемое имя</string>
+    <string name="save_nickname">Сохранить имя</string>
+    <string name="privacy_and_security">Конфиденциальность и безопасность</string>
+    <string name="blocked_users_manager">Управление блокировками</string>
+    <string name="blocked_users_desc">Просмотр и разблокировка узлов</string>
+    <string name="preferences_and_feedback">Настройки и отзывы</string>
+    <string name="theme_style_mode">Тема оформления</string>
+    <string name="theme_system">Системная</string>
+    <string name="theme_light">Светлая</string>
+    <string name="theme_dark">Тёмная</string>
+    <string name="notification_sounds">Звуки уведомлений</string>
+    <string name="haptic_feedback">Виброотклик</string>
+    <string name="battery_saver">P2P экономия батареи</string>
+    <string name="diagnostic_overlay">Диагностический оверлей</string>
+    <string name="profile_qr_pairing">QR-код профиля и сопряжение</string>
+    <string name="share_qr">Поделиться QR</string>
+    <string name="scan_qr">Сканировать QR</string>
+    <string name="network_information">Информация о сети</string>
+    <string name="data_management">Управление данными</string>
+    <string name="auto_archive">Автоархивация старых чатов</string>
+    <string name="clear_chat_history">Очистить историю чатов</string>
+    <string name="cancel">Отмена</string>
+    <string name="delete">Удалить</string>
+    <string name="close">Закрыть</string>
+    <string name="unblock">Разблокировать</string>
+    <string name="schedule">Запланировать</string>
+    <string name="back">Назад</string>
+    <string name="search_messages">Поиск сообщений...</string>
+    <string name="type_message">Введите сообщение...</string>
+    <string name="send">Отправить</string>
+    <string name="end_call">Завершить звонок</string>
+</resources>

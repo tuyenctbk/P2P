@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">P2P Connect</string>
+    <string name="settings">Тохиргоо</string>
+    <string name="blocked_users">Блоклосон хэрэглэгчид</string>
+    <string name="profile_settings">Профайл тохиргоо</string>
+    <string name="display_nickname">Харагдах нэр</string>
+    <string name="save_nickname">Хочийг хадгалах</string>
+    <string name="privacy_and_security">Нууцлал ба аюулгүй байдал</string>
+    <string name="blocked_users_manager">Блокны менежер</string>
+    <string name="blocked_users_desc">Харах болон блокоос гаргах</string>
+    <string name="preferences_and_feedback">Сонголт</string>
+    <string name="theme_style_mode">Загварын горим</string>
+    <string name="theme_system">Систем</string>
+    <string name="theme_light">Цайвар</string>
+    <string name="theme_dark">Бараан</string>
+    <string name="notification_sounds">Мэдэгдлийн дуу</string>
+    <string name="haptic_feedback">Чичиргээ</string>
+    <string name="battery_saver">P2P Батарей хэмнэгч</string>
+    <string name="diagnostic_overlay">Оношлогоо</string>
+    <string name="profile_qr_pairing">Профайлын QR код</string>
+    <string name="share_qr">QR хуваалцах</string>
+    <string name="scan_qr">QR уншуулах</string>
+    <string name="network_information">Сүлжээний мэдээлэл</string>
+    <string name="data_management">Өгөгдлийн менежмент</string>
+    <string name="auto_archive">Хуучин чатуудыг архивлах</string>
+    <string name="clear_chat_history">Түүхийг цэвэрлэх</string>
+    <string name="cancel">Цуцлах</string>
+    <string name="delete">Устгах</string>
+    <string name="close">Хаах</string>
+    <string name="unblock">Блокоос гаргах</string>
+    <string name="schedule">Төлөвлөх</string>
+    <string name="back">Буцах</string>
+    <string name="search_messages">Зурвас хайх...</string>
+    <string name="type_message">Зурвас бичих...</string>
+    <string name="send">Илгээх</string>
+    <string name="end_call">Дуудлага дуусгах</string>
+</resources>

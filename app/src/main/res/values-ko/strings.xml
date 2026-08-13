@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">P2P Connect</string>
+    <string name="settings">설정</string>
+    <string name="blocked_users">차단된 사용자</string>
+    <string name="profile_settings">프로필 설정</string>
+    <string name="display_nickname">표시 닉네임</string>
+    <string name="save_nickname">닉네임 저장</string>
+    <string name="privacy_and_security">개인정보 및 보안</string>
+    <string name="blocked_users_manager">차단 사용자 관리</string>
+    <string name="blocked_users_desc">차단 해제 및 피어 관리</string>
+    <string name="preferences_and_feedback">환경설정</string>
+    <string name="theme_style_mode">테마 모드</string>
+    <string name="theme_system">시스템 기본값</string>
+    <string name="theme_light">라이트</string>
+    <string name="theme_dark">다크</string>
+    <string name="notification_sounds">알림 소리</string>
+    <string name="haptic_feedback">진동 피드백</string>
+    <string name="battery_saver">P2P 배터리 절약 모드</string>
+    <string name="diagnostic_overlay">진단 오버레이</string>
+    <string name="profile_qr_pairing">프로필 QR 및 페어링</string>
+    <string name="share_qr">QR 공유</string>
+    <string name="scan_qr">QR 스캔</string>
+    <string name="network_information">네트워크 정보</string>
+    <string name="data_management">데이터 관리</string>
+    <string name="auto_archive">오래된 채팅 자동 보관</string>
+    <string name="clear_chat_history">채팅 기록 모두 지우기</string>
+    <string name="cancel">취소</string>
+    <string name="delete">삭제</string>
+    <string name="close">닫기</string>
+    <string name="unblock">차단 해제</string>
+    <string name="schedule">전송 예약</string>
+    <string name="back">뒤로</string>
+    <string name="search_messages">메시지 검색...</string>
+    <string name="type_message">메시지 입력...</string>
+    <string name="send">전송</string>
+    <string name="end_call">통화 종료</string>
+</resources>

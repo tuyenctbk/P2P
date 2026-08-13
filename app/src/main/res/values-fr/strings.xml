@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">P2P Connect</string>
+    <string name="settings">Paramètres</string>
+    <string name="blocked_users">Utilisateurs bloqués</string>
+    <string name="profile_settings">Paramètres du profil</string>
+    <string name="display_nickname">Pseudonyme d'affichage</string>
+    <string name="save_nickname">Enregistrer le pseudo</string>
+    <string name="privacy_and_security">Confidentialité et sécurité</string>
+    <string name="blocked_users_manager">Gestionnaire d'utilisateurs bloqués</string>
+    <string name="blocked_users_desc">Afficher et débloquer les pairs</string>
+    <string name="preferences_and_feedback">Préférences</string>
+    <string name="theme_style_mode">Mode de thème</string>
+    <string name="theme_system">Système</string>
+    <string name="theme_light">Clair</string>
+    <string name="theme_dark">Sombre</string>
+    <string name="notification_sounds">Sons de notification</string>
+    <string name="haptic_feedback">Retours haptiques</string>
+    <string name="battery_saver">Mode économie de batterie P2P</string>
+    <string name="diagnostic_overlay">Superposition de diagnostic</string>
+    <string name="profile_qr_pairing">QR Code et appairage</string>
+    <string name="share_qr">Partager QR</string>
+    <string name="scan_qr">Scanner QR</string>
+    <string name="network_information">Informations réseau</string>
+    <string name="data_management">Gestion des données</string>
+    <string name="auto_archive">Archivage automatique des anciens chats</string>
+    <string name="clear_chat_history">Effacer l'historique</string>
+    <string name="cancel">Annuler</string>
+    <string name="delete">Supprimer</string>
+    <string name="close">Fermer</string>
+    <string name="unblock">Débloquer</string>
+    <string name="schedule">Planifier</string>
+    <string name="back">Retour</string>
+    <string name="search_messages">Rechercher des messages...</string>
+    <string name="type_message">Écrire un message...</string>
+    <string name="send">Envoyer</string>
+    <string name="end_call">Raccrocher</string>
+</resources>

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">P2P Connect</string>
+    <string name="settings">ການຕັ້ງຄ່າ</string>
+    <string name="blocked_users">ຜູ້ໃຊ້ທີ່ຖືກບລັອກ</string>
+    <string name="profile_settings">ການຕັ້ງຄ່າໂປຣຟາຍ</string>
+    <string name="display_nickname">ຊື່ສະແດງ</string>
+    <string name="save_nickname">ບັນທຶກຊື່ຫຼິ້ນ</string>
+    <string name="privacy_and_security">ความเป็นສ່ວນຕົວ ແລະ ຄວາມປອດໄພ</string>
+    <string name="blocked_users_manager">ຜູ້ຈັດການການບລັອກ</string>
+    <string name="blocked_users_desc">ເບິ່ງ ແລະ ຍົກເລີກການບລັອກ</string>
+    <string name="preferences_and_feedback">ຄວາມມັກ</string>
+    <string name="theme_style_mode">ໂໝດທີມ</string>
+    <string name="theme_system">ລະບົບ</string>
+    <string name="theme_light">ແຈ້ງ</string>
+    <string name="theme_dark">ມືດ</string>
+    <string name="notification_sounds">ສຽງແຈ້ງເຕືອນ</string>
+    <string name="haptic_feedback">ການສັ່ນ</string>
+    <string name="battery_saver">P2P ປະຢັດແບັດເຕີຣີ</string>
+    <string name="diagnostic_overlay">ການວິນິດໄສ</string>
+    <string name="profile_qr_pairing">ຄິວອາໂຄດໂປຣຟາຍ</string>
+    <string name="share_qr">ແບ່ງປັນ QR</string>
+    <string name="scan_qr">ສະແກນ QR</string>
+    <string name="network_information">ຂໍ້ມູນເຄືອຂ່າຍ</string>
+    <string name="data_management">ການຈັດການຂໍ້ມູນ</string>
+    <string name="auto_archive">ເກັບຮັກສາແຊັດເກົ່າອັດຕະໂນມັດ</string>
+    <string name="clear_chat_history">ລ້າງປະຫວັດ</string>
+    <string name="cancel">ຍົກເລີກ</string>
+    <string name="delete">ລົບ</string>
+    <string name="close">ປິດ</string>
+    <string name="unblock">ຍົກເລີກການບລັອກ</string>
+    <string name="schedule">ກຳນົດເວລາ</string>
+    <string name="back">ກັບຄືນ</string>
+    <string name="search_messages">ຄົ້ນຫາຂໍ້ຄວາມ...</string>
+    <string name="type_message">ພິມຂໍ້ຄວາມ...</string>
+    <string name="send">ສົ່ງ</string>
+    <string name="end_call">ວາງສາຍ</string>
+</resources>

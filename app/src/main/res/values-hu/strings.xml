@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">P2P Connect</string>
+    <string name="settings">Beállítások</string>
+    <string name="blocked_users">Blokkolt felhasználók</string>
+    <string name="profile_settings">Profilbeállítások</string>
+    <string name="display_nickname">Megjelenített név</string>
+    <string name="save_nickname">Becenév mentése</string>
+    <string name="privacy_and_security">Adatvédelem és biztonság</string>
+    <string name="blocked_users_manager">Blokkolások kezelése</string>
+    <string name="blocked_users_desc">Megtekintés és feloldás</string>
+    <string name="preferences_and_feedback">Beállítások</string>
+    <string name="theme_style_mode">Téma mód</string>
+    <string name="theme_system">Rendszer</string>
+    <string name="theme_light">Világos</string>
+    <string name="theme_dark">Sötét</string>
+    <string name="notification_sounds">Értesítési hangok</string>
+    <string name="haptic_feedback">Rezgés</string>
+    <string name="battery_saver">P2P akkumulátorkímélő</string>
+    <string name="diagnostic_overlay">Diagnosztika</string>
+    <string name="profile_qr_pairing">Profil QR-kód</string>
+    <string name="share_qr">QR megosztása</string>
+    <string name="scan_qr">QR beolvasása</string>
+    <string name="network_information">Hálózati információk</string>
+    <string name="data_management">Adatkezelés</string>
+    <string name="auto_archive">Régi csevegések archiválása</string>
+    <string name="clear_chat_history">Előzmények törlése</string>
+    <string name="cancel">Mégse</string>
+    <string name="delete">Törlés</string>
+    <string name="close">Bezárás</string>
+    <string name="unblock">Feloldás</string>
+    <string name="schedule">Időzítés</string>
+    <string name="back">Vissza</string>
+    <string name="search_messages">Üzenetek keresése...</string>
+    <string name="type_message">Írjon egy üzenetet...</string>
+    <string name="send">Küldés</string>
+    <string name="end_call">Hívás befejezése</string>
+</resources>

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">P2P Connect</string>
+    <string name="settings">Configuració</string>
+    <string name="blocked_users">Usuaris meus blocats</string>
+    <string name="profile_settings">Configuració del perfil</string>
+    <string name="display_nickname">Nom visible</string>
+    <string name="save_nickname">Desa el nom</string>
+    <string name="privacy_and_security">Privacitat i seguretat</string>
+    <string name="blocked_users_manager">Gestor de meus blocats</string>
+    <string name="blocked_users_desc">Visualitza i desbloca</string>
+    <string name="preferences_and_feedback">Preferències</string>
+    <string name="theme_style_mode">Mode de tema</string>
+    <string name="theme_system">Sistema</string>
+    <string name="theme_light">Clar</string>
+    <string name="theme_dark">Fosc</string>
+    <string name="notification_sounds">Sons de notificació</string>
+    <string name="haptic_feedback">Vibració</string>
+    <string name="battery_saver">Estalvi de bateria P2P</string>
+    <string name="diagnostic_overlay">Superposició de diagnòstic</string>
+    <string name="profile_qr_pairing">Codi QR del perfil</string>
+    <string name="share_qr">Comparteix QR</string>
+    <string name="scan_qr">Escaneja QR</string>
+    <string name="network_information">Informació de la xarxa</string>
+    <string name="data_management">Gestió de dades</string>
+    <string name="auto_archive">Arxiva xats antics</string>
+    <string name="clear_chat_history">Neteja l'historial</string>
+    <string name="cancel">Cancel·la</string>
+    <string name="delete">Suprimeix</string>
+    <string name="close">Tanca</string>
+    <string name="unblock">Desbloca</string>
+    <string name="schedule">Programa</string>
+    <string name="back">Enrere</string>
+    <string name="search_messages">Cerca missatges...</string>
+    <string name="type_message">Escriu un missatge...</string>
+    <string name="send">Envia</string>
+    <string name="end_call">Finalitza la trucada</string>
+</resources>

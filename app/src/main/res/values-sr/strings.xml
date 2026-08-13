@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">P2P Connect</string>
+    <string name="settings">Подешавања</string>
+    <string name="blocked_users">Блокирани корисници</string>
+    <string name="profile_settings">Подешавања профила</string>
+    <string name="display_nickname">Приказано име</string>
+    <string name="save_nickname">Сачувај надимак</string>
+    <string name="privacy_and_security">Приватност и безбедност</string>
+    <string name="blocked_users_manager">Управљање блокиранима</string>
+    <string name="blocked_users_desc">Прегледај и одблокирај</string>
+    <string name="preferences_and_feedback">Подешавања</string>
+    <string name="theme_style_mode">Режим теме</string>
+    <string name="theme_system">Системски</string>
+    <string name="theme_light">Светла</string>
+    <string name="theme_dark">Тамна</string>
+    <string name="notification_sounds">Звуци обавештења</string>
+    <string name="haptic_feedback">Вибрација</string>
+    <string name="battery_saver">P2P уштеда батерије</string>
+    <string name="diagnostic_overlay">Дијагностика</string>
+    <string name="profile_qr_pairing">QR код профила</string>
+    <string name="share_qr">Подели QR</string>
+    <string name="scan_qr">Скенирај QR</string>
+    <string name="network_information">Мрежне информације</string>
+    <string name="data_management">Управљање подацима</string>
+    <string name="auto_archive">Аутоматски архивирај старе разговоре</string>
+    <string name="clear_chat_history">Очисти историју</string>
+    <string name="cancel">Откажи</string>
+    <string name="delete">Избриши</string>
+    <string name="close">Затвори</string>
+    <string name="unblock">Одблокирај</string>
+    <string name="schedule">Закажи</string>
+    <string name="back">Назад</string>
+    <string name="search_messages">Претражи поруке...</string>
+    <string name="type_message">Упиши поруку...</string>
+    <string name="send">Пошаљи</string>
+    <string name="end_call">Заврши позив</string>
+</resources>

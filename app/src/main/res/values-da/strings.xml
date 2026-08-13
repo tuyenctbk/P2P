@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">P2P Connect</string>
+    <string name="settings">Indstillinger</string>
+    <string name="blocked_users">Blokerede brugere</string>
+    <string name="profile_settings">Profilindstillinger</string>
+    <string name="display_nickname">Visningsnavn</string>
+    <string name="save_nickname">Gem kaldenavn</string>
+    <string name="privacy_and_security">Privatliv og sikkerhed</string>
+    <string name="blocked_users_manager">Styring af blokerede</string>
+    <string name="blocked_users_desc">Vis og fjern blokering</string>
+    <string name="preferences_and_feedback">Præferencer</string>
+    <string name="theme_style_mode">Tema-tilstand</string>
+    <string name="theme_system">System</string>
+    <string name="theme_light">Lys</string>
+    <string name="theme_dark">Mørk</string>
+    <string name="notification_sounds">Notifikationslyde</string>
+    <string name="haptic_feedback">Vibration</string>
+    <string name="battery_saver">P2P Batterisparer</string>
+    <string name="diagnostic_overlay">Diagnostik</string>
+    <string name="profile_qr_pairing">Profil QR-kode</string>
+    <string name="share_qr">Del QR</string>
+    <string name="scan_qr">Scan QR</string>
+    <string name="network_information">Netværksinformation</string>
+    <string name="data_management">Datastyring</string>
+    <string name="auto_archive">Arkiver automatisk gamle chats</string>
+    <string name="clear_chat_history">Ryd historik</string>
+    <string name="cancel">Annuller</string>
+    <string name="delete">Slet</string>
+    <string name="close">Luk</string>
+    <string name="unblock">Fjern blokering</string>
+    <string name="schedule">Planlæg</string>
+    <string name="back">Tilbage</string>
+    <string name="search_messages">Søg beskeder...</string>
+    <string name="type_message">Skriv en besked...</string>
+    <string name="send">Send</string>
+    <string name="end_call">Afslut opkald</string>
+</resources>

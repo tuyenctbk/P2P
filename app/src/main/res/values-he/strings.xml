@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">P2P Connect</string>
+    <string name="settings">הגדרות</string>
+    <string name="blocked_users">משתמשים חסומים</string>
+    <string name="profile_settings">הגדרות פרופיל</string>
+    <string name="display_nickname">שם תצוגה</string>
+    <string name="save_nickname">שמור כינוי</string>
+    <string name="privacy_and_security">פרטיות ואבטחה</string>
+    <string name="blocked_users_manager">ניהול חסומים</string>
+    <string name="blocked_users_desc">הצג ובטל חסימה</string>
+    <string name="preferences_and_feedback">העדפות</string>
+    <string name="theme_style_mode">מצב ערכת נושא</string>
+    <string name="theme_system">מערכת</string>
+    <string name="theme_light">בהיר</string>
+    <string name="theme_dark">כהה</string>
+    <string name="notification_sounds">צלילי התראות</string>
+    <string name="haptic_feedback">רטט</string>
+    <string name="battery_saver">חיסכון בסוללה P2P</string>
+    <string name="diagnostic_overlay">שכבת דיאגנוסטיקה</string>
+    <string name="profile_qr_pairing">קוד QR פרופיל</string>
+    <string name="share_qr">שתף QR</string>
+    <string name="scan_qr">סרוק QR</string>
+    <string name="network_information">מידע רשת</string>
+    <string name="data_management">ניהול נתונים</string>
+    <string name="auto_archive">ארכיון צ'אטים ישנים</string>
+    <string name="clear_chat_history">נקה היסטוריה</string>
+    <string name="cancel">ביטול</string>
+    <string name="delete">מחק</string>
+    <string name="close">סגור</string>
+    <string name="unblock">בטל חסימה</string>
+    <string name="schedule">תזמן</string>
+    <string name="back">חזור</string>
+    <string name="search_messages">חפש הודעות...</string>
+    <string name="type_message">קלד הודעה...</string>
+    <string name="send">שלח</string>
+    <string name="end_call">סיום שיחה</string>
+</resources>

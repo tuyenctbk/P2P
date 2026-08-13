@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">P2P Connect</string>
+    <string name="settings">ಸೆಟ್ಟಿಂಗ್‌ಗಳು</string>
+    <string name="blocked_users">ಬ್ಲಾಕ್ ಮಾಡಿದ ಬಳಕೆದಾರರು</string>
+    <string name="profile_settings">ಪ್ರೊಫೈಲ್ ಸೆಟ್ಟಿಂಗ್‌ಗಳು</string>
+    <string name="display_nickname">ಪ್ರದರ್ಶನ ಹೆಸರು</string>
+    <string name="save_nickname">ಹೆಸರನ್ನು ಉಳಿಸಿ</string>
+    <string name="privacy_and_security">ಗೌಪ್ಯತೆ ಮತ್ತು ಭದ್ರತೆ</string>
+    <string name="blocked_users_manager">ಬ್ಲಾಕ್ ಮ್ಯಾನೇಜರ್</string>
+    <string name="blocked_users_desc">ನೋಡಿ ಮತ್ತು ಅನ್‌ಬ್ಲಾಕ್ ಮಾಡಿ</string>
+    <string name="preferences_and_feedback">ಆದ್ಯತೆಗಳು</string>
+    <string name="theme_style_mode">ಥೀಮ್ ಮೋಡ್</string>
+    <string name="theme_system">ಸಿಸ್ಟಮ್</string>
+    <string name="theme_light">ಲೈಟ್</string>
+    <string name="theme_dark">ಡಾರ್ಕ್</string>
+    <string name="notification_sounds">ಅಧಿಸೂಚನೆ ಧ್ವನಿಗಳು</string>
+    <string name="haptic_feedback">ಕಂಪನ</string>
+    <string name="battery_saver">P2P ಬ್ಯಾಟರಿ ସੇವವರ್</string>
+    <string name="diagnostic_overlay">ರೋಗನಿರ್ಣಯ</string>
+    <string name="profile_qr_pairing">ಪ್ರೊಫೈಲ್ QR ಕೋಡ್</string>
+    <string name="share_qr">QR ಹಂಚಿಕೊಳ್ಳಿ</string>
+    <string name="scan_qr">QR ಸ್ಕ್ಯಾನ್ ಮಾಡಿ</string>
+    <string name="network_information">ನೆಟ್‌ವರ್ಕ್ ಮಾಹಿತಿ</string>
+    <string name="data_management">ಡೇಟಾ ನಿರ್ವಹಣೆ</string>
+    <string name="auto_archive">ಹಳೆಯ ಚಾಟ್‌ಗಳನ್ನು ಆರ್ಕೈವ್ ಮಾಡಿ</string>
+    <string name="clear_chat_history">ಇತಿಹಾಸವನ್ನು ಅಳಿಸಿ</string>
+    <string name="cancel">ರದ್ದುಮಾಡಿ</string>
+    <string name="delete">ಅಳಿಸಿ</string>
+    <string name="close">ಮುಚ್ಚಿ</string>
+    <string name="unblock">ಅನ್‌ಬ್ಲಾಕ್ ಮಾಡಿ</string>
+    <string name="schedule">ಸಮಯ ನಿಗದಿಪಡಿಸಿ</string>
+    <string name="back">ಹಿಂತಿರುಗಿ</string>
+    <string name="search_messages">ಸಂದೇಶಗಳನ್ನು ಹುಡುಕಿ...</string>
+    <string name="type_message">ಸಂದೇಶವನ್ನು टाइप ಮಾಡಿ...</string>
+    <string name="send">ಕಳುಹಿಸಿ</string>
+    <string name="end_call">ಕರೆ ಮುಕ್ತಾಯಗೊಳಿಸಿ</string>
+</resources>

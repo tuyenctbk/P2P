@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">P2P Connect</string>
+    <string name="settings">ቅንብሮች</string>
+    <string name="blocked_users">የታገዱ ተጠቃሚዎች</string>
+    <string name="profile_settings">የመገለጫ ቅንብሮች</string>
+    <string name="display_nickname">የተጠቃሚ ስም</string>
+    <string name="save_nickname">ስም አስቀምጥ</string>
+    <string name="privacy_and_security">ግላዊነት እና ደህንነት</string>
+    <string name="blocked_users_manager">የእገዳ አስተዳዳሪ</string>
+    <string name="blocked_users_desc">ተመልከት እና እገዳ አንሳ</string>
+    <string name="preferences_and_feedback">ምርጫዎች</string>
+    <string name="theme_style_mode">የገጽታ ሁነታ</string>
+    <string name="theme_system">ሲስተም</string>
+    <string name="theme_light">ብሩህ</string>
+    <string name="theme_dark">ጨለማ</string>
+    <string name="notification_sounds">የማስታወቂያ ድምጾች</string>
+    <string name="haptic_feedback">ንዝረት</string>
+    <string name="battery_saver">P2P ባትሪ ቆጣቢ</string>
+    <string name="diagnostic_overlay">ምርመራ</string>
+    <string name="profile_qr_pairing">የQR ኮድ</string>
+    <string name="share_qr">QR አጋራ</string>
+    <string name="scan_qr">QR ስካን አድርግ</string>
+    <string name="network_information">የኔትወርክ መረጃ</string>
+    <string name="data_management">የውሂብ አስተዳደር</string>
+    <string name="auto_archive">የድሮ ውይይቶችን መዝግብ</string>
+    <string name="clear_chat_history">ታሪክ አጽዳ</string>
+    <string name="cancel">ሰርዝ</string>
+    <string name="delete">አጥፋ</string>
+    <string name="close">ዝጋ</string>
+    <string name="unblock">እገዳ አንሳ</string>
+    <string name="schedule">ጊዜ መድብ</string>
+    <string name="back">ተመለስ</string>
+    <string name="search_messages">መልዕክቶችን ፈልግ...</string>
+    <string name="type_message">መልዕክት ፃፍ...</string>
+    <string name="send">ላክ</string>
+    <string name="end_call">ጥሪ ጨርስ</string>
+</resources>

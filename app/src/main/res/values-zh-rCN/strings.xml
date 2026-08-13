@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">P2P Connect</string>
+    <string name="settings">设置</string>
+    <string name="blocked_users">已黑名单用户</string>
+    <string name="profile_settings">个人资料设置</string>
+    <string name="display_nickname">显示昵称</string>
+    <string name="save_nickname">保存昵称</string>
+    <string name="privacy_and_security">隐私与连接安全</string>
+    <string name="blocked_users_manager">黑名单管理</string>
+    <string name="blocked_users_desc">查看并解除受限节点</string>
+    <string name="preferences_and_feedback">偏好设置与反馈</string>
+    <string name="theme_style_mode">主题风格模式</string>
+    <string name="theme_system">跟随系统</string>
+    <string name="theme_light">浅色</string>
+    <string name="theme_dark">深色</string>
+    <string name="notification_sounds">通知提示音</string>
+    <string name="haptic_feedback">触觉反馈 (震动)</string>
+    <string name="battery_saver">P2P 省电模式</string>
+    <string name="diagnostic_overlay">实时诊断悬浮层</string>
+    <string name="profile_qr_pairing">个人二维码与配对</string>
+    <string name="share_qr">分享二维码</string>
+    <string name="scan_qr">扫码配对</string>
+    <string name="network_information">网络信息</string>
+    <string name="data_management">数据管理</string>
+    <string name="auto_archive">自动归档旧聊天记录</string>
+    <string name="clear_chat_history">清除所有聊天记录</string>
+    <string name="cancel">取消</string>
+    <string name="delete">删除</string>
+    <string name="close">关闭</string>
+    <string name="unblock">解除封锁</string>
+    <string name="schedule">定时发送</string>
+    <string name="back">返回</string>
+    <string name="search_messages">搜索消息...</string>
+    <string name="type_message">输入消息...</string>
+    <string name="send">发送</string>
+    <string name="end_call">挂断通话</string>
+</resources>

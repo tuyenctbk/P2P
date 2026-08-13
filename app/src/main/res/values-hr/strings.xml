@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">P2P Connect</string>
+    <string name="settings">Postavke</string>
+    <string name="blocked_users">Blokirani korisnici</string>
+    <string name="profile_settings">Postavke profila</string>
+    <string name="display_nickname">Prikazano ime</string>
+    <string name="save_nickname">Spremi nadimak</string>
+    <string name="privacy_and_security">Privatnost i sigurnost</string>
+    <string name="blocked_users_manager">Upravitelj blokiranih</string>
+    <string name="blocked_users_desc">Pregledaj i odblokiraj</string>
+    <string name="preferences_and_feedback">Preference</string>
+    <string name="theme_style_mode">Način teme</string>
+    <string name="theme_system">Sustav</string>
+    <string name="theme_light">Svijetlo</string>
+    <string name="theme_dark">Tamno</string>
+    <string name="notification_sounds">Zvuci obavijesti</string>
+    <string name="haptic_feedback">Vibracija</string>
+    <string name="battery_saver">P2P štednja baterije</string>
+    <string name="diagnostic_overlay">Dijagnostika</string>
+    <string name="profile_qr_pairing">QR kod profila</string>
+    <string name="share_qr">Podijeli QR</string>
+    <string name="scan_qr">Skeniraj QR</string>
+    <string name="network_information">Mrežne informacije</string>
+    <string name="data_management">Upravljanje podacima</string>
+    <string name="auto_archive">Automatski arhiviraj stare razgovore</string>
+    <string name="clear_chat_history">Očisti povijest</string>
+    <string name="cancel">Odustani</string>
+    <string name="delete">Izbriši</string>
+    <string name="close">Zatvori</string>
+    <string name="unblock">Odblokiraj</string>
+    <string name="schedule">Zakaži</string>
+    <string name="back">Natrag</string>
+    <string name="search_messages">Pretraži poruke...</string>
+    <string name="type_message">Napiši poruku...</string>
+    <string name="send">Pošalji</string>
+    <string name="end_call">Završi poziv</string>
+</resources>

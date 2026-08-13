@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">P2P Connect</string>
+    <string name="settings">Nastavení</string>
+    <string name="blocked_users">Blokovaní uživatelé</string>
+    <string name="profile_settings">Nastavení profilu</string>
+    <string name="display_nickname">Zobrazované jméno</string>
+    <string name="save_nickname">Uložit přezdívku</string>
+    <string name="privacy_and_security">Soukromí a bezpečnost</string>
+    <string name="blocked_users_manager">Správce blokování</string>
+    <string name="blocked_users_desc">Zobrazit a odblokovat</string>
+    <string name="preferences_and_feedback">Předvolby</string>
+    <string name="theme_style_mode">Režim motivu</string>
+    <string name="theme_system">Systém</string>
+    <string name="theme_light">Světlý</string>
+    <string name="theme_dark">Tmavý</string>
+    <string name="notification_sounds">Zvuky oznámení</string>
+    <string name="haptic_feedback">Vibrace</string>
+    <string name="battery_saver">P2P spořič baterie</string>
+    <string name="diagnostic_overlay">Diagnostická vrstva</string>
+    <string name="profile_qr_pairing">QR kód profilu</string>
+    <string name="share_qr">Sdílet QR</string>
+    <string name="scan_qr">Skenovat QR</string>
+    <string name="network_information">Informace o síti</string>
+    <string name="data_management">Správa dat</string>
+    <string name="auto_archive">Automaticky archivovat staré chaty</string>
+    <string name="clear_chat_history">Vymazat historii</string>
+    <string name="cancel">Zrušit</string>
+    <string name="delete">Smazat</string>
+    <string name="close">Zavřít</string>
+    <string name="unblock">Odblokovat</string>
+    <string name="schedule">Naplánovat</string>
+    <string name="back">Zpět</string>
+    <string name="search_messages">Hledat zprávy...</string>
+    <string name="type_message">Napište zprávu...</string>
+    <string name="send">Odeslat</string>
+    <string name="end_call">Ukončit hovor</string>
+</resources>

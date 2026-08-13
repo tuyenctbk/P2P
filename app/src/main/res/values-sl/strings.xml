@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">P2P Connect</string>
+    <string name="settings">Nastavitve</string>
+    <string name="blocked_users">Blokirani uporabniki</string>
+    <string name="profile_settings">Nastavitve profila</string>
+    <string name="display_nickname">Prikazno ime</string>
+    <string name="save_nickname">Shrani vzdevek</string>
+    <string name="privacy_and_security">Zasebnost in varnost</string>
+    <string name="blocked_users_manager">Upravitelj blokiranih</string>
+    <string name="blocked_users_desc">Ogled in odblokiranje</string>
+    <string name="preferences_and_feedback">Možnosti</string>
+    <string name="theme_style_mode">Način teme</string>
+    <string name="theme_system">Sistemsko</string>
+    <string name="theme_light">Svetlo</string>
+    <string name="theme_dark">Temno</string>
+    <string name="notification_sounds">Zvoki obvestil</string>
+    <string name="haptic_feedback">Vibriranje</string>
+    <string name="battery_saver">P2P varčevanje z baterijo</string>
+    <string name="diagnostic_overlay">Diagnostični sloj</string>
+    <string name="profile_qr_pairing">QR koda profila</string>
+    <string name="share_qr">Deli QR</string>
+    <string name="scan_qr">Skeniraj QR</string>
+    <string name="network_information">Omrežne informacije</string>
+    <string name="data_management">Upravljanje podatkov</string>
+    <string name="auto_archive">Samodejno arhiviraj stare pogovore</string>
+    <string name="clear_chat_history">Izbriši zgodovino pogovorov</string>
+    <string name="cancel">Prekliči</string>
+    <string name="delete">Izbriši</string>
+    <string name="close">Zapri</string>
+    <string name="unblock">Odblokiraj</string>
+    <string name="schedule">Razporedi</string>
+    <string name="back">Nazaj</string>
+    <string name="search_messages">Išči sporočila...</string>
+    <string name="type_message">Vpiši sporočilo...</string>
+    <string name="send">Pošlji</string>
+    <string name="end_call">Končaj klic</string>
+</resources>

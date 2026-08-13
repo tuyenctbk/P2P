@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">P2P Connect</string>
+    <string name="settings">Ustawienia</string>
+    <string name="blocked_users">Zablokowani użytkownicy</string>
+    <string name="profile_settings">Ustawienia profilu</string>
+    <string name="display_nickname">Nazwa wyświetlana</string>
+    <string name="save_nickname">Zapisz pseudonim</string>
+    <string name="privacy_and_security">Prywatność i bezpieczeństwo</string>
+    <string name="blocked_users_manager">Menedżer blokad</string>
+    <string name="blocked_users_desc">Wyświetl i odblokuj</string>
+    <string name="preferences_and_feedback">Preferencje</string>
+    <string name="theme_style_mode">Tryb motywu</string>
+    <string name="theme_system">Systemowy</string>
+    <string name="theme_light">Jasny</string>
+    <string name="theme_dark">Ciemny</string>
+    <string name="notification_sounds">Dźwięki powiadomień</string>
+    <string name="haptic_feedback">Wibracje</string>
+    <string name="battery_saver">Oszczędzanie baterii P2P</string>
+    <string name="diagnostic_overlay">Nakładka diagnostyczna</string>
+    <string name="profile_qr_pairing">Kod QR profilu</string>
+    <string name="share_qr">Udostępnij QR</string>
+    <string name="scan_qr">Skanuj QR</string>
+    <string name="network_information">Informacje o sieci</string>
+    <string name="data_management">Zarządzanie danymi</string>
+    <string name="auto_archive">Automatycznie archiwizuj stare czaty</string>
+    <string name="clear_chat_history">Wyczyść historię</string>
+    <string name="cancel">Anuluj</string>
+    <string name="delete">Usuń</string>
+    <string name="close">Zamknij</string>
+    <string name="unblock">Odblokuj</string>
+    <string name="schedule">Zaplanuj</string>
+    <string name="back">Wstecz</string>
+    <string name="search_messages">Szukaj wiadomości...</string>
+    <string name="type_message">Wpisz wiadomość...</string>
+    <string name="send">Wyślij</string>
+    <string name="end_call">Zakończ połączenie</string>
+</resources>

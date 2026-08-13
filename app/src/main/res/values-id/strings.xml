@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">P2P Connect</string>
+    <string name="settings">Pengaturan</string>
+    <string name="blocked_users">Pengguna Diblokir</string>
+    <string name="profile_settings">Pengaturan Profil</string>
+    <string name="display_nickname">Nama Tampilan</string>
+    <string name="save_nickname">Simpan Nama</string>
+    <string name="privacy_and_security">Privasi &amp; Keamanan</string>
+    <string name="blocked_users_manager">Pengelola Blokir</string>
+    <string name="blocked_users_desc">Lihat dan buka blokir</string>
+    <string name="preferences_and_feedback">Preferensi</string>
+    <string name="theme_style_mode">Mode Tema</string>
+    <string name="theme_system">Sistem</string>
+    <string name="theme_light">Terang</string>
+    <string name="theme_dark">Gelap</string>
+    <string name="notification_sounds">Suara Notifikasi</string>
+    <string name="haptic_feedback">Getaran</string>
+    <string name="battery_saver">Penghemat Baterai P2P</string>
+    <string name="diagnostic_overlay">Hamparan Diagnostik</string>
+    <string name="profile_qr_pairing">Kode QR Profil</string>
+    <string name="share_qr">Bagikan QR</string>
+    <string name="scan_qr">Pindai QR</string>
+    <string name="network_information">Informasi Jaringan</string>
+    <string name="data_management">Manajemen Data</string>
+    <string name="auto_archive">Arsipkan Obrolan Lama Otomatis</string>
+    <string name="clear_chat_history">Hapus Riwayat Obrolan</string>
+    <string name="cancel">Batal</string>
+    <string name="delete">Hapus</string>
+    <string name="close">Tutup</string>
+    <string name="unblock">Buka Blokir</string>
+    <string name="schedule">Jadwalkan</string>
+    <string name="back">Kembali</string>
+    <string name="search_messages">Cari pesan...</string>
+    <string name="type_message">Ketik pesan...</string>
+    <string name="send">Kirim</string>
+    <string name="end_call">Akhiri Panggilan</string>
+</resources>

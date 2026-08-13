@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">P2P Connect</string>
+    <string name="settings">Iestatījumi</string>
+    <string name="blocked_users">Bloķētie lietotāji</string>
+    <string name="profile_settings">Profila iestatījumi</string>
+    <string name="display_nickname">Displeja vārds</string>
+    <string name="save_nickname">Saglabāt segvārdu</string>
+    <string name="privacy_and_security">Privātums un drošība</string>
+    <string name="blocked_users_manager">Bloķēšanas pārvaldnieks</string>
+    <string name="blocked_users_desc">Skatīt un atbloķēt</string>
+    <string name="preferences_and_feedback">Preferences</string>
+    <string name="theme_style_mode">Motīva režīms</string>
+    <string name="theme_system">Sistēma</string>
+    <string name="theme_light">Gaišs</string>
+    <string name="theme_dark">Tumšs</string>
+    <string name="notification_sounds">Paziņojumu skaņas</string>
+    <string name="haptic_feedback">Vibrācija</string>
+    <string name="battery_saver">P2P akumulatora taupīšana</string>
+    <string name="diagnostic_overlay">Diagnostika</string>
+    <string name="profile_qr_pairing">Profila QR kods</string>
+    <string name="share_qr">Dalīties ar QR</string>
+    <string name="scan_qr">Skenēt QR</string>
+    <string name="network_information">Tīkla informācija</string>
+    <string name="data_management">Datu pārvaldība</string>
+    <string name="auto_archive">Automātiski arhivēt vecas tērzēšanas</string>
+    <string name="clear_chat_history">Notīrīt vēsturi</string>
+    <string name="cancel">Atcelt</string>
+    <string name="delete">Dzēst</string>
+    <string name="close">Aizvērt</string>
+    <string name="unblock">Atbloķēt</string>
+    <string name="schedule">Plānot</string>
+    <string name="back">Atpakaļ</string>
+    <string name="search_messages">Meklēt ziņas...</string>
+    <string name="type_message">Ievadiet ziņu...</string>
+    <string name="send">Nosūtīt</string>
+    <string name="end_call">Beigt zvanu</string>
+</resources>

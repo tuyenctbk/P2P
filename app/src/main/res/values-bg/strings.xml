@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">P2P Connect</string>
+    <string name="settings">Настройки</string>
+    <string name="blocked_users">Блокирани потребители</string>
+    <string name="profile_settings">Настройки на профила</string>
+    <string name="display_nickname">Показвано име</string>
+    <string name="save_nickname">Запазване на псевдоним</string>
+    <string name="privacy_and_security">Поверителност и сигурност</string>
+    <string name="blocked_users_manager">Управление на блокираните</string>
+    <string name="blocked_users_desc">Преглед и деблокиране</string>
+    <string name="preferences_and_feedback">Предпочитания</string>
+    <string name="theme_style_mode">Режим на темата</string>
+    <string name="theme_system">Системна</string>
+    <string name="theme_light">Светла</string>
+    <string name="theme_dark">Тъмна</string>
+    <string name="notification_sounds">Звуци за известия</string>
+    <string name="haptic_feedback">Вибрация</string>
+    <string name="battery_saver">P2P Пестене на батерия</string>
+    <string name="diagnostic_overlay">Диагностика</string>
+    <string name="profile_qr_pairing">QR код на профила</string>
+    <string name="share_qr">Споделяне на QR</string>
+    <string name="scan_qr">Сканиране на QR</string>
+    <string name="network_information">Мрежова информация</string>
+    <string name="data_management">Управление на данни</string>
+    <string name="auto_archive">Автоархивиране на стари чатове</string>
+    <string name="clear_chat_history">Изчистване на историята</string>
+    <string name="cancel">Отказ</string>
+    <string name="delete">Изтриване</string>
+    <string name="close">Затваряне</string>
+    <string name="unblock">Деблокиране</string>
+    <string name="schedule">Планиране</string>
+    <string name="back">Назад</string>
+    <string name="search_messages">Търсене на съобщения...</string>
+    <string name="type_message">Въведете съобщение...</string>
+    <string name="send">Изпращане</string>
+    <string name="end_call">Край на разговора</string>
+</resources>

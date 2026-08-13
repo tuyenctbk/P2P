@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">P2P Connect</string>
+    <string name="settings">الإعدادات</string>
+    <string name="blocked_users">المستخدمون المحظورون</string>
+    <string name="profile_settings">إعدادات الملف الشخصي</string>
+    <string name="display_nickname">الاسم المستعار للشاشة</string>
+    <string name="save_nickname">حفظ الاسم المستعار</string>
+    <string name="privacy_and_security">الخصوصية وأمان الاتصال</string>
+    <string name="blocked_users_manager">إدارة المستخدمين المحظورين</string>
+    <string name="blocked_users_desc">عرض وإلغاء حظر الأقران المقيدين</string>
+    <string name="preferences_and_feedback">التفضيلات والتعليقات</string>
+    <string name="theme_style_mode">وضع المظهر</string>
+    <string name="theme_system">النظام</string>
+    <string name="theme_light">فاتح</string>
+    <string name="theme_dark">داكن</string>
+    <string name="notification_sounds">أصوات الإشعارات</string>
+    <string name="haptic_feedback">الاستجابة اللمسية (الاهتزاز)</string>
+    <string name="battery_saver">وضع توفير البطارية P2P</string>
+    <string name="diagnostic_overlay">تراكب التشخيص المباشر</string>
+    <string name="profile_qr_pairing">رمز QR للملف الشخصي والاقتران</string>
+    <string name="share_qr">مشاركة رمز QR</string>
+    <string name="scan_qr">مسح رمز QR</string>
+    <string name="network_information">معلومات الشبكة</string>
+    <string name="data_management">إدارة البيانات</string>
+    <string name="auto_archive">أرشفة المحادثات القديمة تلقائيًا</string>
+    <string name="clear_chat_history">مسح جميع سجلات الدردشة</string>
+    <string name="cancel">إلغاء</string>
+    <string name="delete">حذف</string>
+    <string name="close">إغلاق</string>
+    <string name="unblock">إلغاء الحظر</string>
+    <string name="schedule">جدولة</string>
+    <string name="back">رجوع</string>
+    <string name="search_messages">البحث في الرسائل...</string>
+    <string name="type_message">اكتب رسالة...</string>
+    <string name="send">إرسال</string>
+    <string name="end_call">إنهاء المكالمة</string>
+</resources>

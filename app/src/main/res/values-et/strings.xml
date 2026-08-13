@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">P2P Connect</string>
+    <string name="settings">Seaded</string>
+    <string name="blocked_users">Blokeeritud kasutajad</string>
+    <string name="profile_settings">Profiili seaded</string>
+    <string name="display_nickname">Kuvatav nimi</string>
+    <string name="save_nickname">Salvesta hüüdnimi</string>
+    <string name="privacy_and_security">Privaatsus ja turvalisus</string>
+    <string name="blocked_users_manager">Blokeeringute haldur</string>
+    <string name="blocked_users_desc">Vaata ja eemalda blokeering</string>
+    <string name="preferences_and_feedback">Eelistused</string>
+    <string name="theme_style_mode">Teema režiim</string>
+    <string name="theme_system">Süsteem</string>
+    <string name="theme_light">Hele</string>
+    <string name="theme_dark">Tume</string>
+    <string name="notification_sounds">Teavitushääled</string>
+    <string name="haptic_feedback">Vibratsioon</string>
+    <string name="battery_saver">P2P akusäästja</string>
+    <string name="diagnostic_overlay">Diagnostika</string>
+    <string name="profile_qr_pairing">Profiili QR-kood</string>
+    <string name="share_qr">Jaga QR-i</string>
+    <string name="scan_qr">Skänni QR-i</string>
+    <string name="network_information">Võrguteave</string>
+    <string name="data_management">Andmehaldus</string>
+    <string name="auto_archive">Arhiveeri vanad vestlused</string>
+    <string name="clear_chat_history">Puhasta ajalugu</string>
+    <string name="cancel">Tühista</string>
+    <string name="delete">Kustuta</string>
+    <string name="close">Sulge</string>
+    <string name="unblock">Eemalda blokeering</string>
+    <string name="schedule">Ajasta</string>
+    <string name="back">Tagasi</string>
+    <string name="search_messages">Otsi sõnumeid...</string>
+    <string name="type_message">Kirjuta sõnum...</string>
+    <string name="send">Saada</string>
+    <string name="end_call">Lõpeta kõne</string>
+</resources>
