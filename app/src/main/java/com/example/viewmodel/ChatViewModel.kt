@@ -815,40 +815,6 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
             calendar.add(java.util.Calendar.DAY_OF_YEAR, -1)
         }
         
-        val allZero = stats.all { it.second.first == 0L && it.second.second == 0L }
-        if (allZero) {
-            val tempCalendar = java.util.Calendar.getInstance()
-            val mockValues = listOf(
-                Pair(1500000L, 2300000L),
-                Pair(4500000L, 8200000L),
-                Pair(3100000L, 4100000L),
-                Pair(6200000L, 9500000L),
-                Pair(1200000L, 1800000L),
-                Pair(8000000L, 11000000L),
-                Pair(2500000L, 3500000L)
-            )
-            for (i in 0 until 7) {
-                val dateStr = sdf.format(tempCalendar.time)
-                val (mSent, mRecv) = mockValues[i]
-                prefs.edit()
-                    .putLong("data_sent_$dateStr", mSent)
-                    .putLong("data_recv_$dateStr", mRecv)
-                    .apply()
-                tempCalendar.add(java.util.Calendar.DAY_OF_YEAR, -1)
-            }
-            stats.clear()
-            val recCalendar = java.util.Calendar.getInstance()
-            for (i in 0 until 7) {
-                val date = recCalendar.time
-                val dateStr = sdf.format(date)
-                val label = labelSdf.format(date)
-                val sent = prefs.getLong("data_sent_$dateStr", 0L)
-                val recv = prefs.getLong("data_recv_$dateStr", 0L)
-                stats.add(Pair(label, Pair(sent, recv)))
-                recCalendar.add(java.util.Calendar.DAY_OF_YEAR, -1)
-            }
-        }
-        
         return stats.reversed()
     }
 

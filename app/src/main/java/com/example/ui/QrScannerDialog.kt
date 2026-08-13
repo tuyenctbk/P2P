@@ -100,28 +100,7 @@ fun QrScannerDialog(
                     )
                 }
 
-                // Quick simulation buttons for testing
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
-                    OutlinedButton(
-                        onClick = {
-                            scannedInput = "p2pconnect://add?ip=192.168.1.105&name=Alex"
-                        },
-                        modifier = Modifier.testTag("simulate_qr_1")
-                    ) {
-                        Text("Simulate Alex")
-                    }
-                    OutlinedButton(
-                        onClick = {
-                            scannedInput = "p2pconnect://add?ip=192.168.1.150&name=Sarah"
-                        },
-                        modifier = Modifier.testTag("simulate_qr_2")
-                    ) {
-                        Text("Simulate Sarah")
-                    }
-                }
+
 
                 Button(
                     onClick = {
