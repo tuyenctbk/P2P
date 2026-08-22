@@ -1,6 +1,7 @@
 package com.example.ui.navigation
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -8,6 +9,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.NavOptionsBuilder
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.ui.screens.ChatScreen
 import com.example.ui.screens.HomeScreen
@@ -33,6 +35,15 @@ fun P2PChatNavGraph(
     val prefs = remember { context.getSharedPreferences("p2p_prefs", android.content.Context.MODE_PRIVATE) }
     val isOnboardingCompleted = remember { prefs.getBoolean("onboarding_completed", false) }
     val startRoute = if (isOnboardingCompleted) Screen.Home.route else Screen.Onboarding.route
+
+    val navBackStackEntry by navController.currentBackStackEntryAsState()
+    val currentRoute = navBackStackEntry?.destination?.route
+
+    LaunchedEffect(currentRoute) {
+        if (currentRoute != null) {
+            viewModel.logCustomScreenView(currentRoute)
+        }
+    }
 
     NavHost(
         navController = navController,

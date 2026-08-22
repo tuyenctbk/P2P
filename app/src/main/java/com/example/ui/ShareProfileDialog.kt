@@ -20,6 +20,9 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 
+import androidx.compose.ui.res.stringResource
+import com.example.R
+
 @Composable
 fun ShareProfileDialog(
     myName: String,
@@ -48,11 +51,11 @@ fun ShareProfileDialog(
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Icon(Icons.Default.QrCode, contentDescription = null, tint = MaterialTheme.colorScheme.primary)
                     Spacer(modifier = Modifier.width(8.dp))
-                    Text("My Profile QR Code", style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Bold)
+                    Text(stringResource(R.string.qr_code_dialog_title), style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Bold)
                 }
 
                 Text(
-                    text = "Let nearby peers scan this code to connect instantly.",
+                    text = stringResource(R.string.qr_code_dialog_subtitle),
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     textAlign = TextAlign.Center
