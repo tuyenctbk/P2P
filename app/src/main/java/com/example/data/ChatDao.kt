@@ -65,6 +65,21 @@ interface ChatDao {
     @Query("DELETE FROM chat_messages")
     suspend fun clearMessages()
 
+    @Query("DELETE FROM chat_messages WHERE timestamp < :cutoffTime AND status != 'SCHEDULED'")
+    suspend fun purgeMessagesOlderThan(cutoffTime: Long): Int
+
+    @Query("SELECT COUNT(*) FROM chat_messages WHERE timestamp < :cutoffTime AND status != 'SCHEDULED'")
+    suspend fun countMessagesOlderThan(cutoffTime: Long): Int
+
+    @Query("SELECT * FROM chat_peers WHERE isBlocked = 1 ORDER BY lastSeen DESC")
+    fun getBlockedPeers(): Flow<List<ChatPeer>>
+
+    @Query("SELECT address FROM chat_peers WHERE isBlocked = 1")
+    fun getBlockedPeerAddressesFlow(): Flow<List<String>>
+
+    @Query("SELECT address FROM chat_peers WHERE isBlocked = 1")
+    suspend fun getBlockedPeerAddresses(): List<String>
+
     @Query("SELECT * FROM chat_peers WHERE address = :address")
     suspend fun getPeer(address: String): ChatPeer?
 

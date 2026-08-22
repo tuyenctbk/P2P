@@ -7,12 +7,18 @@ import androidx.lifecycle.viewModelScope
 import com.example.data.AppDatabase
 import com.example.data.ChatMessage
 import com.example.data.ChatPeer
+import com.example.data.UserPreferencesRepository
+import com.example.network.NetworkChangeEvent
+import com.example.network.NetworkConnectivityMonitor
+import com.example.network.NetworkStatus
+import com.example.network.P2PBackgroundSyncScheduler
 import com.example.network.P2PNetworkManager
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.stateIn
@@ -37,24 +43,85 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
     private val chatDao = database.chatDao()
     private val p2pManager = P2PNetworkManager(application)
     private val audioNotifier = com.example.util.AudioNotifier(application)
+    private val voiceRecorderManager = com.example.util.VoiceRecorderManager(application)
+    val firebaseService = com.example.util.FirebaseService(application)
+    val userPreferencesRepository = UserPreferencesRepository(application)
+    val connectivityMonitor = NetworkConnectivityMonitor(application)
 
     private val _uiState = MutableStateFlow(ChatUiState())
     val uiState: StateFlow<ChatUiState> = _uiState.asStateFlow()
 
-    private val _themeMode = MutableStateFlow("SYSTEM") // SYSTEM, LIGHT, DARK
-    val themeMode: StateFlow<String> = _themeMode.asStateFlow()
+    // Persistent Jetpack DataStore Flows
+    val themeMode: StateFlow<String> = userPreferencesRepository.themeModeFlow
+        .stateIn(viewModelScope, SharingStarted.Eagerly, "SYSTEM")
 
-    private val _isDiagnosticOverlayVisible = MutableStateFlow(true)
-    val isDiagnosticOverlayVisible: StateFlow<Boolean> = _isDiagnosticOverlayVisible.asStateFlow()
+    val appLanguage: StateFlow<String> = userPreferencesRepository.appLanguageFlow
+        .stateIn(viewModelScope, SharingStarted.Eagerly, "SYSTEM")
 
-    private val _isPowerSaverEnabled = MutableStateFlow(false)
-    val isPowerSaverEnabled: StateFlow<Boolean> = _isPowerSaverEnabled.asStateFlow()
+    val autoPurgeDuration: StateFlow<String> = userPreferencesRepository.autoPurgeDurationFlow
+        .stateIn(viewModelScope, SharingStarted.Eagerly, "OFF")
 
-    private val _isAutoArchiveEnabled = MutableStateFlow(false)
-    val isAutoArchiveEnabled: StateFlow<Boolean> = _isAutoArchiveEnabled.asStateFlow()
+    val isPowerSaverEnabled: StateFlow<Boolean> = userPreferencesRepository.powerSaverFlow
+        .stateIn(viewModelScope, SharingStarted.Eagerly, false)
+
+    val isAutoArchiveEnabled: StateFlow<Boolean> = userPreferencesRepository.autoArchiveFlow
+        .stateIn(viewModelScope, SharingStarted.Eagerly, false)
+
+    val isDiagnosticOverlayVisible: StateFlow<Boolean> = userPreferencesRepository.diagnosticOverlayFlow
+        .stateIn(viewModelScope, SharingStarted.Eagerly, true)
+
+    val isBackgroundSyncEnabled: StateFlow<Boolean> = userPreferencesRepository.backgroundSyncEnabledFlow
+        .stateIn(viewModelScope, SharingStarted.Eagerly, true)
+
+    val lastBackgroundSync: StateFlow<String?> = userPreferencesRepository.lastBackgroundSyncFlow
+        .stateIn(viewModelScope, SharingStarted.Eagerly, null)
+
+    // Connectivity & Wi-Fi Listener State
+    val networkStatus: StateFlow<NetworkStatus> = connectivityMonitor.networkStatus
+    val wifiSwitchBannerVisible: StateFlow<Boolean> = connectivityMonitor.wifiSwitchBannerVisible
+    val lastNetworkMessage: StateFlow<String?> = connectivityMonitor.lastNetworkMessage
+
+    val isFirebaseActive: StateFlow<Boolean> = firebaseService.isFirebaseActive
+    val firebaseEventsLog: StateFlow<List<String>> = firebaseService.recentEventsLog
+    val remoteConfigStatus: StateFlow<String> = firebaseService.remoteConfigStatus
+    val remoteAccentColor: StateFlow<String> = firebaseService.uiAccentColor
+
+    // App Health & Diagnostics from Crashlytics and Analytics
+    val healthSummary: StateFlow<com.example.util.AppHealthSummary> = com.example.util.P2PExceptionHandler.healthSummary
+    val recentErrors: StateFlow<List<com.example.util.P2PDiagnosticErrorEvent>> = com.example.util.P2PExceptionHandler.recentErrors
+    val messagesSentCount: StateFlow<Int> = firebaseService.messagesSentCount
+    val filesSharedCount: StateFlow<Int> = firebaseService.filesSharedCount
+    val discoveriesInitiatedCount: StateFlow<Int> = firebaseService.discoveriesInitiatedCount
+
+    // Firebase App Check with reCAPTCHA flows
+    val appCheckStatus: StateFlow<String> = firebaseService.appCheckStatus
+    val isAppCheckVerified: StateFlow<Boolean> = firebaseService.isAppCheckVerified
+    val lastAppCheckToken: StateFlow<String?> = firebaseService.lastAppCheckToken
+
+    // Dynamic Remote Config Feature Flags
+    val isVoiceNotesEnabled: StateFlow<Boolean> = firebaseService.isVoiceNotesEnabled
+    val isReactionsEnabled: StateFlow<Boolean> = firebaseService.isReactionsEnabled
+    val isAutoPurgeEnabled: StateFlow<Boolean> = firebaseService.isAutoPurgeEnabled
+    val isQuickReplyEnabled: StateFlow<Boolean> = firebaseService.isQuickReplyEnabled
+    val isAppCheckEnforced: StateFlow<Boolean> = firebaseService.isAppCheckEnforced
+    val maxAttachmentSizeMb: StateFlow<Long> = firebaseService.maxAttachmentSizeMb
+    val remoteBannerAnnouncement: StateFlow<String> = firebaseService.remoteBannerAnnouncement
+
+    // UX Shimmer Loading States
+    private val _isDiscoveryLoading = MutableStateFlow(true)
+    val isDiscoveryLoading: StateFlow<Boolean> = _isDiscoveryLoading.asStateFlow()
+
+    private val _isMessageHistoryLoading = MutableStateFlow(false)
+    val isMessageHistoryLoading: StateFlow<Boolean> = _isMessageHistoryLoading.asStateFlow()
 
     val isSoundNotificationsEnabled: StateFlow<Boolean> = audioNotifier.isSoundEnabled
     val isHapticEnabled: StateFlow<Boolean> = audioNotifier.isHapticEnabled
+
+    val isVoiceRecording: StateFlow<Boolean> = voiceRecorderManager.isRecording
+    val recordingDurationSec: StateFlow<Int> = voiceRecorderManager.recordingDurationSec
+    val currentVoiceAmplitudes: StateFlow<List<Float>> = voiceRecorderManager.currentAmplitudes
+    val playingVoiceMessageId: StateFlow<Long?> = voiceRecorderManager.playingMessageId
+    val voicePlaybackProgress: StateFlow<Float> = voiceRecorderManager.playbackProgress
 
     val peerPresence: StateFlow<Map<String, com.example.network.PeerPresenceInfo>> = p2pManager.peerPresence
 
@@ -104,29 +171,54 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
         }
 
     init {
-        // Load saved theme preference
-        val prefs = application.getSharedPreferences("p2p_prefs", Context.MODE_PRIVATE)
-        _themeMode.value = prefs.getString("theme_mode", "SYSTEM") ?: "SYSTEM"
+        // Initialize Firebase Crashlytics custom exception handler and diagnostics
+        com.example.util.P2PExceptionHandler.init(application, firebaseService)
 
-        // Load or generate a stable display name from prefs
-        val savedName = prefs.getString("my_nickname", null)
-        if (savedName.isNullOrBlank()) {
-            val generatedName = "User_${(100..999).random()}"
-            prefs.edit().putString("my_nickname", generatedName).apply()
-            _uiState.value = _uiState.value.copy(myName = generatedName)
-        } else {
-            _uiState.value = _uiState.value.copy(myName = savedName)
-        }
-
-        // Load blocked peers into P2PNetworkManager
+        // Load or generate stable display name from DataStore
         viewModelScope.launch {
-            val blocked = chatDao.getAllPeersList().filter { it.isBlocked }.map { it.address }.toSet()
-            p2pManager.setBlockedPeers(blocked)
+            val savedName = userPreferencesRepository.myNicknameFlow.first()
+            if (savedName.isNullOrBlank()) {
+                val generatedName = "User_${(100..999).random()}"
+                userPreferencesRepository.setMyNickname(generatedName)
+                _uiState.value = _uiState.value.copy(myName = generatedName)
+            } else {
+                _uiState.value = _uiState.value.copy(myName = savedName)
+            }
         }
-        val autoArchiveEnabled = prefs.getBoolean("auto_archive_enabled", false)
-        _isAutoArchiveEnabled.value = autoArchiveEnabled
-        if (autoArchiveEnabled) {
-            runAutoArchive()
+
+        // Schedule WorkManager periodic background sync
+        viewModelScope.launch {
+            val powerSaver = userPreferencesRepository.powerSaverFlow.first()
+            P2PBackgroundSyncScheduler.schedulePeriodicSync(application, powerSaver)
+        }
+
+        // Listen for Wi-Fi / subnet network switch events
+        viewModelScope.launch {
+            connectivityMonitor.networkChangeEvents.collect { event ->
+                android.util.Log.i("ChatViewModel", "Network switched to: ${event.currentNetwork} (${event.currentIp})")
+                _uiState.value = _uiState.value.copy(localIp = event.currentIp)
+                p2pManager.broadcastPresence(_uiState.value.myName)
+                triggerDiscoveryRefresh()
+            }
+        }
+
+        // Load blocked peers and keep in sync with P2PNetworkManager
+        viewModelScope.launch {
+            chatDao.getBlockedPeerAddressesFlow().collect { addresses ->
+                p2pManager.setBlockedPeers(addresses.toSet())
+            }
+        }
+
+        // Initial auto-purge & auto-archive check from persistent DataStore
+        viewModelScope.launch {
+            val purgeDuration = userPreferencesRepository.autoPurgeDurationFlow.first()
+            if (purgeDuration != "OFF") {
+                purgeOldMessages(purgeDuration)
+            }
+            val autoArchive = userPreferencesRepository.autoArchiveFlow.first()
+            if (autoArchive) {
+                runAutoArchive()
+            }
         }
 
         // Observe byte transfers for daily diagnostic statistics
@@ -244,6 +336,13 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
                 )
                 chatDao.insertMessage(message)
 
+                // Log Analytics event for incoming message
+                firebaseService.logMessageReceived(
+                    type = event.attachmentType.ifEmpty { "TEXT" },
+                    isEncrypted = true,
+                    hasAttachment = event.attachmentType != "NONE"
+                )
+
                 if (event.attachmentType == "IMAGE" || event.attachmentType == "DOCUMENT") {
                     audioNotifier.playFileTransferSound()
                 } else {
@@ -309,21 +408,31 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
             }
         }
 
-        // Initial broadcast
+        // Initial broadcast & discovery shimmer transition
         broadcastPresence()
+        viewModelScope.launch {
+            kotlinx.coroutines.delay(1200)
+            _isDiscoveryLoading.value = false
+        }
     }
 
     fun updateNickname(newName: String) {
         if (newName.isNotBlank()) {
             val trimmed = newName.trim()
             _uiState.value = _uiState.value.copy(myName = trimmed)
-            val prefs = getApplication<Application>().getSharedPreferences("p2p_prefs", Context.MODE_PRIVATE)
-            prefs.edit().putString("my_nickname", trimmed).apply()
+            viewModelScope.launch {
+                userPreferencesRepository.setMyNickname(trimmed)
+            }
             broadcastPresence()
         }
     }
 
     fun selectPeer(address: String?, name: String?) {
+        _isMessageHistoryLoading.value = true
+        viewModelScope.launch {
+            kotlinx.coroutines.delay(600)
+            _isMessageHistoryLoading.value = false
+        }
         viewModelScope.launch {
             val peer = if (address != null) chatDao.getPeer(address) else null
             _uiState.value = _uiState.value.copy(
@@ -338,9 +447,16 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     fun setThemeMode(mode: String) {
-        _themeMode.value = mode
-        val prefs = getApplication<Application>().getSharedPreferences("p2p_prefs", Context.MODE_PRIVATE)
-        prefs.edit().putString("theme_mode", mode).apply()
+        viewModelScope.launch {
+            userPreferencesRepository.setThemeMode(mode)
+        }
+        firebaseService.logThemeChanged(mode)
+    }
+
+    fun setAppLanguage(languageCode: String) {
+        viewModelScope.launch {
+            userPreferencesRepository.setAppLanguage(languageCode)
+        }
     }
 
     fun markSelectedChatAsRead() {
@@ -362,8 +478,9 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
                 "$current,$emoji"
             }
             chatDao.updateMessageReactions(message.id, updatedReactions)
+            firebaseService.logReactionAdded(emoji)
 
-            if (message.peerAddress != "GROUP" && message.peerAddress != "127.0.0.2") {
+            if (message.peerAddress != "GROUP" && message.peerAddress != "127.0.0.1") {
                 p2pManager.sendReaction(message.peerAddress, _uiState.value.myName, message.timestamp, emoji)
             }
         }
@@ -434,6 +551,7 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
             chatDao.updatePeerBlockedStatus(address, true)
             val blocked = chatDao.getAllPeersList().filter { it.isBlocked }.map { it.address }.toSet()
             p2pManager.setBlockedPeers(blocked)
+            firebaseService.logPeerBlocked(address)
             if (_uiState.value.selectedPeerAddress == address) {
                 _uiState.value = _uiState.value.copy(isSelectedPeerBlocked = true)
             }
@@ -445,6 +563,7 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
             chatDao.updatePeerBlockedStatus(address, false)
             val blocked = chatDao.getAllPeersList().filter { it.isBlocked }.map { it.address }.toSet()
             p2pManager.setBlockedPeers(blocked)
+            firebaseService.logEvent("peer_unblocked", mapOf("peer_hash" to address.hashCode().toString()))
             if (_uiState.value.selectedPeerAddress == address) {
                 _uiState.value = _uiState.value.copy(isSelectedPeerBlocked = false)
             }
@@ -460,6 +579,7 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
             if (address.isNotBlank()) {
                 val peerName = if (name.isBlank()) address else name
                 chatDao.insertPeer(ChatPeer(address = address.trim(), name = peerName.trim(), lastSeen = System.currentTimeMillis(), isConnected = true))
+                firebaseService.logPeerConnected(address.trim(), isManual = true)
                 selectPeer(address.trim(), peerName.trim())
             }
         }
@@ -475,6 +595,13 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
 
         val myName = _uiState.value.myName
         viewModelScope.launch {
+            firebaseService.logMessageSent(
+                type = if (attachmentType != "NONE") attachmentType else "TEXT",
+                isEncrypted = true,
+                hasAttachment = attachmentType != "NONE",
+                isScheduled = false
+            )
+
             if (targetIp == "GROUP") {
                 val outgoingMsg = ChatMessage(
                     peerAddress = "GROUP",
@@ -624,9 +751,47 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
                 }.toString()
 
                 val attType = if (isImage || mimeType.startsWith("image/")) "IMAGE" else "DOCUMENT"
+                firebaseService.logFileShared(
+                    fileName = fileName,
+                    fileSizeBytes = bytes.size.toLong(),
+                    mimeType = mimeType,
+                    isSuccess = true,
+                    transferMode = "P2P_DIRECT"
+                )
                 sendAttachment(text = "", attachmentType = attType, attachmentData = metaJson)
             } catch (e: Exception) {
                 android.util.Log.e("ChatViewModel", "Error processing attachment Uri", e)
+                com.example.util.P2PExceptionHandler.recordGeneralException(e, "ATTACHMENT_PROCESSING")
+            }
+        }
+    }
+
+    fun sendImageBitmap(bitmap: android.graphics.Bitmap) {
+        viewModelScope.launch {
+            try {
+                val outputStream = java.io.ByteArrayOutputStream()
+                bitmap.compress(android.graphics.Bitmap.CompressFormat.JPEG, 85, outputStream)
+                val bytes = outputStream.toByteArray()
+                val base64Data = android.util.Base64.encodeToString(bytes, android.util.Base64.NO_WRAP)
+                val fileName = "camera_${System.currentTimeMillis()}.jpg"
+                val fileSizeFormatted = String.format("%.1f KB", bytes.size / 1024f)
+                val metaJson = org.json.JSONObject().apply {
+                    put("fileName", fileName)
+                    put("fileSize", fileSizeFormatted)
+                    put("mimeType", "image/jpeg")
+                    put("base64", base64Data)
+                }.toString()
+                firebaseService.logFileShared(
+                    fileName = fileName,
+                    fileSizeBytes = bytes.size.toLong(),
+                    mimeType = "image/jpeg",
+                    isSuccess = true,
+                    transferMode = "P2P_DIRECT"
+                )
+                sendAttachment(text = "", attachmentType = "IMAGE", attachmentData = metaJson)
+            } catch (e: Exception) {
+                android.util.Log.e("ChatViewModel", "Error sending camera bitmap", e)
+                com.example.util.P2PExceptionHandler.recordGeneralException(e, "CAMERA_ATTACHMENT")
             }
         }
     }
@@ -743,22 +908,52 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     fun toggleDiagnosticOverlay() {
-        _isDiagnosticOverlayVisible.value = !_isDiagnosticOverlayVisible.value
+        val current = isDiagnosticOverlayVisible.value
+        viewModelScope.launch {
+            userPreferencesRepository.setDiagnosticOverlayVisible(!current)
+        }
     }
 
     fun setSoundNotificationsEnabled(enabled: Boolean) {
         audioNotifier.setSoundEnabled(enabled)
+        viewModelScope.launch {
+            userPreferencesRepository.setSoundEnabled(enabled)
+        }
     }
 
     fun setHapticEnabled(enabled: Boolean) {
         audioNotifier.setHapticEnabled(enabled)
+        viewModelScope.launch {
+            userPreferencesRepository.setHapticEnabled(enabled)
+        }
     }
 
     fun setPowerSaverEnabled(enabled: Boolean) {
-        _isPowerSaverEnabled.value = enabled
-        val prefs = getApplication<Application>().getSharedPreferences("p2p_prefs", Context.MODE_PRIVATE)
-        prefs.edit().putBoolean("power_saver_enabled", enabled).apply()
+        viewModelScope.launch {
+            userPreferencesRepository.setPowerSaverEnabled(enabled)
+            P2PBackgroundSyncScheduler.schedulePeriodicSync(getApplication(), enabled)
+        }
         p2pManager.checkBatteryState()
+    }
+
+    fun setBackgroundSyncEnabled(enabled: Boolean) {
+        viewModelScope.launch {
+            userPreferencesRepository.setBackgroundSyncEnabled(enabled)
+            if (enabled) {
+                val powerSaver = isPowerSaverEnabled.value
+                P2PBackgroundSyncScheduler.schedulePeriodicSync(getApplication(), powerSaver)
+            } else {
+                P2PBackgroundSyncScheduler.cancelBackgroundSync(getApplication())
+            }
+        }
+    }
+
+    fun triggerImmediateBackgroundSync() {
+        P2PBackgroundSyncScheduler.triggerOneTimeSync(getApplication())
+    }
+
+    fun dismissWifiSwitchBanner() {
+        connectivityMonitor.dismissWifiSwitchBanner()
     }
 
     fun clearHistory() {
@@ -768,9 +963,9 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     fun setAutoArchiveEnabled(enabled: Boolean) {
-        _isAutoArchiveEnabled.value = enabled
-        val prefs = getApplication<Application>().getSharedPreferences("p2p_prefs", Context.MODE_PRIVATE)
-        prefs.edit().putBoolean("auto_archive_enabled", enabled).apply()
+        viewModelScope.launch {
+            userPreferencesRepository.setAutoArchiveEnabled(enabled)
+        }
         if (enabled) {
             runAutoArchive()
         }
@@ -852,8 +1047,167 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
         return stats.reversed()
     }
 
+    // --- Voice Recording & Audio Playback ---
+
+    fun startVoiceRecording(): Boolean {
+        return voiceRecorderManager.startRecording()
+    }
+
+    fun cancelVoiceRecording() {
+        voiceRecorderManager.cancelRecording()
+    }
+
+    fun sendVoiceRecording() {
+        viewModelScope.launch {
+            val clipResult = voiceRecorderManager.stopRecording()
+            if (clipResult != null) {
+                val jsonMeta = org.json.JSONObject().apply {
+                    put("durationSec", clipResult.durationSec)
+                    put("base64", clipResult.base64Audio)
+                    put("fileName", clipResult.fileName)
+                    put("fileSize", clipResult.fileSize)
+                    put("mimeType", "audio/mp4")
+                }.toString()
+                firebaseService.logVoiceClipRecorded(
+                    durationSec = clipResult.durationSec,
+                    sizeKb = clipResult.fileSize.replace(" KB", "").toFloatOrNull() ?: 0f
+                )
+                sendAttachment(text = "", attachmentType = "VOICE", attachmentData = jsonMeta)
+            }
+        }
+    }
+
+    fun togglePlayVoice(messageId: Long, base64Audio: String) {
+        firebaseService.logVoiceClipPlayed(0)
+        voiceRecorderManager.playVoiceClip(messageId, base64Audio)
+    }
+
+    fun stopVoicePlayback() {
+        voiceRecorderManager.stopPlayback()
+    }
+
+    // --- Auto-Purge Old Messages Settings & Operations ---
+
+    fun setAutoPurgeDuration(duration: String) {
+        viewModelScope.launch {
+            userPreferencesRepository.setAutoPurgeDuration(duration)
+        }
+        if (duration != "OFF") {
+            viewModelScope.launch {
+                purgeOldMessages(duration)
+            }
+        }
+    }
+
+    suspend fun purgeOldMessages(durationKey: String = autoPurgeDuration.value): Int {
+        val durationMillis = when (durationKey) {
+            "24_HOURS" -> 24L * 60 * 60 * 1000
+            "7_DAYS" -> 7L * 24 * 60 * 60 * 1000
+            "30_DAYS" -> 30L * 24 * 60 * 60 * 1000
+            "90_DAYS" -> 90L * 24 * 60 * 60 * 1000
+            else -> return 0
+        }
+        val cutoff = System.currentTimeMillis() - durationMillis
+        val deletedCount = chatDao.purgeMessagesOlderThan(cutoff)
+        if (deletedCount > 0) {
+            firebaseService.logMessagesPurged(deletedCount, durationKey)
+        }
+        return deletedCount
+    }
+
+    suspend fun getPurgeCandidateCount(durationKey: String = autoPurgeDuration.value): Int {
+        val durationMillis = when (durationKey) {
+            "24_HOURS" -> 24L * 60 * 60 * 1000
+            "7_DAYS" -> 7L * 24 * 60 * 60 * 1000
+            "30_DAYS" -> 30L * 24 * 60 * 60 * 1000
+            "90_DAYS" -> 90L * 24 * 60 * 60 * 1000
+            else -> return 0
+        }
+        val cutoff = System.currentTimeMillis() - durationMillis
+        return chatDao.countMessagesOlderThan(cutoff)
+    }
+
+    // --- Firebase Free Services Diagnostic & Configuration ---
+
+    fun testFirebaseDiagnostics() {
+        firebaseService.sendTestDiagnosticCrashlyticsLog()
+    }
+
+    fun refreshRemoteConfig() {
+        firebaseService.fetchRemoteConfig()
+    }
+
+    fun logCustomScreenView(screenName: String) {
+        firebaseService.logScreenView(screenName)
+    }
+
+    fun verifyAppCheck(forceRefresh: Boolean = false, onComplete: (com.example.util.AppCheckVerificationResult) -> Unit = {}) {
+        firebaseService.verifyTrafficIntegrity(forceRefresh, onComplete)
+    }
+
+    fun updateRemoteFeatureFlag(key: String, enabled: Boolean) {
+        firebaseService.updateRemoteFeatureFlag(key, enabled)
+    }
+
+    fun updateRemoteConfigLong(key: String, value: Long) {
+        firebaseService.updateRemoteConfigLong(key, value)
+    }
+
+    fun updateRemoteBanner(bannerText: String) {
+        firebaseService.updateRemoteBanner(bannerText)
+    }
+
+    fun updateRemoteAccentColor(colorHex: String) {
+        firebaseService.updateRemoteAccentColor(colorHex)
+    }
+
+    fun triggerTestSocketError(targetIp: String = "192.168.1.254") {
+        com.example.util.P2PExceptionHandler.triggerTestSocketError(targetIp)
+    }
+
+    fun triggerTestBackgroundSyncError() {
+        com.example.util.P2PExceptionHandler.triggerTestBackgroundSyncError()
+    }
+
+    fun clearDiagnosticLogs() {
+        com.example.util.P2PExceptionHandler.clearDiagnosticLogs()
+    }
+
+    val bleFallbackStatus: StateFlow<String> = p2pManager.bleFallbackStatus
+    val blePeers: StateFlow<Map<String, com.example.network.BleDiscoveredPeer>> = p2pManager.blePeers
+
+    fun connectToPeerFromQrScan(ip: String, name: String) {
+        viewModelScope.launch {
+            p2pManager.registerDiscoveredPeer(ip, name, "QR_HANDSHAKE")
+            val pingMs = p2pManager.pingPeer(ip)
+            if (pingMs >= 0) {
+                p2pManager.sendMessage(
+                    targetIp = ip,
+                    myName = _uiState.value.myName,
+                    text = "🤝 Secure P2P Handshake established via QR Scan!"
+                )
+            }
+            selectPeer(ip, name)
+        }
+    }
+    fun triggerDiscoveryRefresh() {
+        _isDiscoveryLoading.value = true
+        firebaseService.logPeerDiscoveryInitiated(
+            triggerSource = "MANUAL_SCAN",
+            subnetPrefix = networkStatus.value.subnetPrefix,
+            broadcastPort = 8889,
+            knownPeersCount = uiState.value.discoveredPeers.size
+        )
+        broadcastPresence()
+        viewModelScope.launch {
+            kotlinx.coroutines.delay(900)
+            _isDiscoveryLoading.value = false
+        }
+    }
+
     override fun onCleared() {
         super.onCleared()
+        voiceRecorderManager.stopPlayback()
         audioNotifier.release()
         p2pManager.stop()
     }

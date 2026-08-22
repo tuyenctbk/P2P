@@ -22,8 +22,12 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.compose.ui.res.stringResource
+import com.example.R
 import com.example.ui.QrCodeView
 import com.example.ui.QrScannerDialog
+import com.example.ui.components.AppCheckVerificationDialog
+import com.example.ui.components.ShimmerDiscoveryPeerList
 import com.example.viewmodel.ChatViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -40,6 +44,17 @@ fun HomeScreen(
     val searchQuery by viewModel.globalSearchQuery.collectAsStateWithLifecycle()
     val globalSearchResults by viewModel.globalSearchResults.collectAsStateWithLifecycle()
 
+    val isDiscoveryLoading by viewModel.isDiscoveryLoading.collectAsStateWithLifecycle()
+    val appCheckStatus by viewModel.appCheckStatus.collectAsStateWithLifecycle()
+    val isAppCheckVerified by viewModel.isAppCheckVerified.collectAsStateWithLifecycle()
+    val isAppCheckEnforced by viewModel.isAppCheckEnforced.collectAsStateWithLifecycle()
+    val remoteBannerAnnouncement by viewModel.remoteBannerAnnouncement.collectAsStateWithLifecycle()
+
+    // Network Connectivity & Wi-Fi Listener State
+    val wifiSwitchBannerVisible by viewModel.wifiSwitchBannerVisible.collectAsStateWithLifecycle()
+    val lastNetworkMessage by viewModel.lastNetworkMessage.collectAsStateWithLifecycle()
+    val networkStatus by viewModel.networkStatus.collectAsStateWithLifecycle()
+
     val isOverlayVisible by viewModel.isDiagnosticOverlayVisible.collectAsStateWithLifecycle()
     val sendSpeedBps by viewModel.sendSpeedBps.collectAsStateWithLifecycle()
     val recvSpeedBps by viewModel.recvSpeedBps.collectAsStateWithLifecycle()
@@ -52,6 +67,7 @@ fun HomeScreen(
     var showConnectTabsDialog by remember { mutableStateOf(false) }
     var showHowToDialog by remember { mutableStateOf(false) }
     var showEditNicknameDialog by remember { mutableStateOf(false) }
+    var showAppCheckDialog by remember { mutableStateOf(false) }
     var showThemeMenu by remember { mutableStateOf(false) }
     var showScannerDialog by remember { mutableStateOf(false) }
     var manualIp by remember { mutableStateOf("") }
@@ -174,6 +190,110 @@ fun HomeScreen(
                     )
                 }
 
+                // Wi-Fi Network Change Notification Alert Banner
+                if (wifiSwitchBannerVisible) {
+                    Surface(
+                        shape = RoundedCornerShape(14.dp),
+                        color = MaterialTheme.colorScheme.secondaryContainer,
+                        border = androidx.compose.foundation.BorderStroke(1.dp, MaterialTheme.colorScheme.secondary),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .testTag("wifi_switch_banner")
+                    ) {
+                        Column(modifier = Modifier.padding(12.dp)) {
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.SpaceBetween,
+                                modifier = Modifier.fillMaxWidth()
+                            ) {
+                                Row(
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    modifier = Modifier.weight(1f)
+                                ) {
+                                    Icon(
+                                        imageVector = Icons.Default.WifiTethering,
+                                        contentDescription = "Wi-Fi Network Changed",
+                                        tint = MaterialTheme.colorScheme.onSecondaryContainer
+                                    )
+                                    Spacer(modifier = Modifier.width(8.dp))
+                                    Text(
+                                        text = "Wi-Fi Subnet Changed",
+                                        style = MaterialTheme.typography.titleSmall,
+                                        fontWeight = FontWeight.Bold,
+                                        color = MaterialTheme.colorScheme.onSecondaryContainer
+                                    )
+                                }
+                                IconButton(
+                                    onClick = { viewModel.dismissWifiSwitchBanner() },
+                                    modifier = Modifier.size(28.dp)
+                                ) {
+                                    Icon(
+                                        Icons.Default.Close,
+                                        contentDescription = "Dismiss Network Notification",
+                                        tint = MaterialTheme.colorScheme.onSecondaryContainer,
+                                        modifier = Modifier.size(18.dp)
+                                    )
+                                }
+                            }
+                            Spacer(modifier = Modifier.height(4.dp))
+                            Text(
+                                text = lastNetworkMessage ?: "Switched Wi-Fi network. Peers must be connected to the same subnet (${networkStatus.subnetPrefix}.*) for direct P2P messaging.",
+                                style = MaterialTheme.typography.bodySmall,
+                                color = MaterialTheme.colorScheme.onSecondaryContainer
+                            )
+                            Spacer(modifier = Modifier.height(8.dp))
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                horizontalArrangement = Arrangement.End
+                            ) {
+                                OutlinedButton(
+                                    onClick = {
+                                        viewModel.triggerDiscoveryRefresh()
+                                        viewModel.dismissWifiSwitchBanner()
+                                    },
+                                    colors = ButtonDefaults.outlinedButtonColors(
+                                        contentColor = MaterialTheme.colorScheme.onSecondaryContainer
+                                    ),
+                                    modifier = Modifier.testTag("rescan_network_button")
+                                ) {
+                                    Icon(
+                                        Icons.Default.Refresh,
+                                        contentDescription = null,
+                                        modifier = Modifier.size(16.dp)
+                                    )
+                                    Spacer(modifier = Modifier.width(6.dp))
+                                    Text("Re-scan Subnet", style = MaterialTheme.typography.labelMedium)
+                                }
+                            }
+                        }
+                    }
+                }
+
+                // Announcement Banner from Firebase Remote Config (if present)
+                if (remoteBannerAnnouncement.isNotBlank()) {
+                    Surface(
+                        shape = RoundedCornerShape(14.dp),
+                        color = MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.7f),
+                        border = androidx.compose.foundation.BorderStroke(1.dp, MaterialTheme.colorScheme.primary.copy(alpha = 0.3f)),
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Row(
+                            modifier = Modifier.padding(horizontal = 14.dp, vertical = 10.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Icon(Icons.Default.Campaign, contentDescription = null, tint = MaterialTheme.colorScheme.primary)
+                            Spacer(modifier = Modifier.width(10.dp))
+                            Text(
+                                text = remoteBannerAnnouncement,
+                                style = MaterialTheme.typography.bodySmall,
+                                fontWeight = FontWeight.Medium,
+                                color = MaterialTheme.colorScheme.onPrimaryContainer,
+                                modifier = Modifier.weight(1f)
+                            )
+                        }
+                    }
+                }
+
                 // Local Profile Premium Card
                 Card(
                     modifier = Modifier.fillMaxWidth(),
@@ -183,58 +303,98 @@ fun HomeScreen(
                     ),
                     border = androidx.compose.foundation.BorderStroke(1.dp, MaterialTheme.colorScheme.primary.copy(alpha = 0.15f))
                 ) {
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(12.dp),
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.SpaceBetween
-                    ) {
-                        Row(verticalAlignment = Alignment.CenterVertically) {
-                            Box(
-                                modifier = Modifier
-                                    .size(38.dp)
-                                    .clip(CircleShape)
-                                    .background(MaterialTheme.colorScheme.primary.copy(alpha = 0.15f)),
-                                contentAlignment = Alignment.Center
-                            ) {
-                                Text(
-                                    text = uiState.myName.take(1).uppercase(),
-                                    style = MaterialTheme.typography.titleMedium,
-                                    fontWeight = FontWeight.Bold,
-                                    color = MaterialTheme.colorScheme.primary
-                                )
+                    Column(modifier = Modifier.padding(12.dp)) {
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.SpaceBetween
+                        ) {
+                            Row(verticalAlignment = Alignment.CenterVertically) {
+                                Box(
+                                    modifier = Modifier
+                                        .size(38.dp)
+                                        .clip(CircleShape)
+                                        .background(MaterialTheme.colorScheme.primary.copy(alpha = 0.15f)),
+                                    contentAlignment = Alignment.Center
+                                ) {
+                                    Text(
+                                        text = uiState.myName.take(1).uppercase(),
+                                        style = MaterialTheme.typography.titleMedium,
+                                        fontWeight = FontWeight.Bold,
+                                        color = MaterialTheme.colorScheme.primary
+                                    )
+                                }
+                                Spacer(modifier = Modifier.width(10.dp))
+                                Column {
+                                    Text(
+                                        text = "@${uiState.myName}",
+                                        style = MaterialTheme.typography.titleSmall,
+                                        fontWeight = FontWeight.Bold,
+                                        color = MaterialTheme.colorScheme.onSurface
+                                    )
+                                    Text(
+                                        text = "IP Address: ${uiState.localIp}",
+                                        style = MaterialTheme.typography.bodySmall,
+                                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                                    )
+                                }
                             }
-                            Spacer(modifier = Modifier.width(10.dp))
-                            Column {
-                                Text(
-                                    text = "@${uiState.myName}",
-                                    style = MaterialTheme.typography.titleSmall,
-                                    fontWeight = FontWeight.Bold,
-                                    color = MaterialTheme.colorScheme.onSurface
-                                )
-                                Text(
-                                    text = "IP Address: ${uiState.localIp}",
-                                    style = MaterialTheme.typography.bodySmall,
-                                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                            IconButton(
+                                onClick = { 
+                                    connectTabSelected = 0
+                                    showConnectTabsDialog = true 
+                                },
+                                modifier = Modifier
+                                    .background(MaterialTheme.colorScheme.primary, shape = CircleShape)
+                                    .size(32.dp)
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Default.QrCode,
+                                    contentDescription = "Show My QR Code",
+                                    tint = MaterialTheme.colorScheme.onPrimary,
+                                    modifier = Modifier.size(16.dp)
                                 )
                             }
                         }
-                        IconButton(
-                            onClick = { 
-                                connectTabSelected = 0
-                                showConnectTabsDialog = true 
-                            },
+
+                        Spacer(modifier = Modifier.height(8.dp))
+
+                        // App Check Security Badge
+                        Surface(
+                            shape = RoundedCornerShape(8.dp),
+                            color = MaterialTheme.colorScheme.surface.copy(alpha = 0.7f),
+                            border = androidx.compose.foundation.BorderStroke(0.5.dp, MaterialTheme.colorScheme.primary.copy(alpha = 0.3f)),
                             modifier = Modifier
-                                .background(MaterialTheme.colorScheme.primary, shape = CircleShape)
-                                .size(32.dp)
+                                .fillMaxWidth()
+                                .clickable { showAppCheckDialog = true }
+                                .testTag("home_app_check_badge")
                         ) {
-                            Icon(
-                                imageVector = Icons.Default.QrCode,
-                                contentDescription = "Show My QR Code",
-                                tint = MaterialTheme.colorScheme.onPrimary,
-                                modifier = Modifier.size(16.dp)
-                            )
+                            Row(
+                                modifier = Modifier.padding(horizontal = 10.dp, vertical = 6.dp),
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.SpaceBetween
+                            ) {
+                                Row(verticalAlignment = Alignment.CenterVertically) {
+                                    Icon(
+                                        imageVector = Icons.Default.Security,
+                                        contentDescription = null,
+                                        tint = if (isAppCheckVerified) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.error,
+                                        modifier = Modifier.size(14.dp)
+                                    )
+                                    Spacer(modifier = Modifier.width(6.dp))
+                                    Text(
+                                        text = if (isAppCheckVerified) "App Check Protected • reCAPTCHA Verified" else "App Check Attestation Needed",
+                                        style = MaterialTheme.typography.labelSmall,
+                                        fontSize = 11.sp,
+                                        color = MaterialTheme.colorScheme.onSurface
+                                    )
+                                }
+                                Text(
+                                    text = "Verify ➔",
+                                    style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold, fontSize = 10.sp),
+                                    color = MaterialTheme.colorScheme.primary
+                                )
+                            }
                         }
                     }
                 }
@@ -243,7 +403,7 @@ fun HomeScreen(
                 OutlinedTextField(
                     value = searchQuery,
                     onValueChange = { viewModel.setGlobalSearchQuery(it) },
-                    placeholder = { Text("Search peers & message history...") },
+                    placeholder = { Text(stringResource(R.string.search_placeholder)) },
                     leadingIcon = { Icon(Icons.Default.Search, contentDescription = "Search") },
                     trailingIcon = {
                         if (searchQuery.isNotBlank()) {
@@ -442,7 +602,13 @@ fun HomeScreen(
 
                 Spacer(modifier = Modifier.height(4.dp))
 
-                if (filteredPeers.isEmpty()) {
+                if (isDiscoveryLoading) {
+                    ShimmerDiscoveryPeerList(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .weight(1f)
+                    )
+                } else if (filteredPeers.isEmpty()) {
                     Box(
                         modifier = Modifier
                             .fillMaxWidth()
@@ -463,10 +629,19 @@ fun HomeScreen(
                                 color = MaterialTheme.colorScheme.outline
                             )
                             Text(
-                                text = if (peerTabSelected == 1) "Archived chats will appear here" else "Tap connect button above to share or connect",
+                                text = if (peerTabSelected == 1) "Archived chats will appear here" else "Tap connect button above to share or scan subnet",
                                 style = MaterialTheme.typography.bodySmall,
                                 color = MaterialTheme.colorScheme.outline
                             )
+                            Spacer(modifier = Modifier.height(12.dp))
+                            OutlinedButton(
+                                onClick = { viewModel.triggerDiscoveryRefresh() },
+                                shape = RoundedCornerShape(12.dp)
+                            ) {
+                                Icon(Icons.Default.Radar, contentDescription = null, modifier = Modifier.size(16.dp))
+                                Spacer(modifier = Modifier.width(6.dp))
+                                Text("Scan Local Subnet")
+                            }
                         }
                     }
                 } else {
@@ -660,6 +835,42 @@ fun HomeScreen(
                             Spacer(modifier = Modifier.width(8.dp))
                             Text("Scan QR via Camera / Image")
                         }
+
+                        // App Check Verification Status Banner
+                        Surface(
+                            shape = RoundedCornerShape(10.dp),
+                            color = MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.4f),
+                            border = androidx.compose.foundation.BorderStroke(0.5.dp, MaterialTheme.colorScheme.primary.copy(alpha = 0.3f)),
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .clickable {
+                                    showConnectTabsDialog = false
+                                    showAppCheckDialog = true
+                                }
+                        ) {
+                            Row(
+                                modifier = Modifier.padding(horizontal = 10.dp, vertical = 6.dp),
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.SpaceBetween
+                            ) {
+                                Row(verticalAlignment = Alignment.CenterVertically) {
+                                    Icon(
+                                        imageVector = Icons.Default.Security,
+                                        contentDescription = null,
+                                        tint = MaterialTheme.colorScheme.primary,
+                                        modifier = Modifier.size(14.dp)
+                                    )
+                                    Spacer(modifier = Modifier.width(6.dp))
+                                    Text(
+                                        text = "Firebase App Check Active",
+                                        style = MaterialTheme.typography.labelSmall,
+                                        color = MaterialTheme.colorScheme.onSurface
+                                    )
+                                }
+                                Text("Details ➔", style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold), color = MaterialTheme.colorScheme.primary)
+                            }
+                        }
+
                         HorizontalDivider(modifier = Modifier.padding(vertical = 4.dp))
                         OutlinedTextField(
                             value = manualIp,
@@ -770,7 +981,7 @@ fun HomeScreen(
         QrScannerDialog(
             onDismiss = { showScannerDialog = false },
             onPeerScanned = { ip, name ->
-                viewModel.addManualPeer(ip, name)
+                viewModel.connectToPeerFromQrScan(ip, name)
                 onNavigateToChat()
             }
         )
@@ -779,6 +990,13 @@ fun HomeScreen(
     if (showHowToDialog) {
         QrScannerHowToDialog(
             onDismiss = { showHowToDialog = false }
+        )
+    }
+
+    if (showAppCheckDialog) {
+        AppCheckVerificationDialog(
+            viewModel = viewModel,
+            onDismiss = { showAppCheckDialog = false }
         )
     }
 }

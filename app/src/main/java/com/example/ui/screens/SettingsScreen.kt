@@ -15,6 +15,10 @@ import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.QrCode
 import androidx.compose.material.icons.filled.QrCodeScanner
+import androidx.compose.material.icons.filled.BugReport
+import androidx.compose.material.icons.filled.Refresh
+import androidx.compose.material.icons.filled.Language
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -25,8 +29,13 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import kotlinx.coroutines.launch
+import androidx.compose.ui.res.stringResource
+import com.example.R
 import com.example.ui.ShareProfileDialog
 import com.example.ui.QrScannerDialog
+import com.example.ui.components.RemoteConfigFeatureControlCard
+import com.example.ui.components.AppHealthDiagnosticCard
 import com.example.viewmodel.ChatViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -37,15 +46,17 @@ fun SettingsScreen(
     onNavigateToBlockedUsers: () -> Unit
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val appLanguage by viewModel.appLanguage.collectAsStateWithLifecycle()
     var nicknameInput by remember { mutableStateOf(uiState.myName) }
     var showClearDialog by remember { mutableStateOf(false) }
     var showShareQrDialog by remember { mutableStateOf(false) }
     var showScannerDialog by remember { mutableStateOf(false) }
+    var showLanguageDialog by remember { mutableStateOf(false) }
 
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Settings", fontWeight = FontWeight.Bold) },
+                title = { Text(stringResource(R.string.settings_title), fontWeight = FontWeight.Bold) },
                 navigationIcon = {
                     IconButton(
                         onClick = onNavigateBack,
@@ -169,6 +180,101 @@ fun SettingsScreen(
                                     tint = MaterialTheme.colorScheme.onSurfaceVariant
                                 )
                             }
+                        }
+                    }
+                }
+
+                // App Language & Localization Card
+                Card(
+                    modifier = Modifier.fillMaxWidth(),
+                    shape = RoundedCornerShape(20.dp),
+                    border = androidx.compose.foundation.BorderStroke(1.dp, MaterialTheme.colorScheme.outline),
+                    colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.7f))
+                ) {
+                    Column(modifier = Modifier.padding(16.dp)) {
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Row(verticalAlignment = Alignment.CenterVertically) {
+                                Icon(Icons.Default.Language, contentDescription = null, tint = MaterialTheme.colorScheme.primary)
+                                Spacer(modifier = Modifier.width(8.dp))
+                                Text("App Language & Localization", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
+                            }
+                            Surface(
+                                shape = RoundedCornerShape(8.dp),
+                                color = if (appLanguage == "SYSTEM") MaterialTheme.colorScheme.primaryContainer else MaterialTheme.colorScheme.secondaryContainer
+                            ) {
+                                Text(
+                                    text = if (appLanguage == "SYSTEM") "🌐 Auto (System)" else "🌐 Custom",
+                                    style = MaterialTheme.typography.labelSmall,
+                                    color = if (appLanguage == "SYSTEM") MaterialTheme.colorScheme.onPrimaryContainer else MaterialTheme.colorScheme.onSecondaryContainer,
+                                    modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
+                                    fontWeight = FontWeight.Bold
+                                )
+                            }
+                        }
+
+                        Spacer(modifier = Modifier.height(6.dp))
+                        val currentSysLang = remember { java.util.Locale.getDefault().displayLanguage }
+                        Text(
+                            text = if (appLanguage == "SYSTEM") "Auto-selecting language after system settings ($currentSysLang)" else "Manual locale override active",
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+
+                        Spacer(modifier = Modifier.height(12.dp))
+
+                        // Quick choices
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.spacedBy(6.dp)
+                        ) {
+                            listOf(
+                                "SYSTEM" to "Auto Select",
+                                "en" to "English",
+                                "es" to "Español",
+                                "vi" to "Tiếng Việt"
+                            ).forEach { (code, label) ->
+                                val isSelected = appLanguage == code
+                                Surface(
+                                    onClick = { viewModel.setAppLanguage(code) },
+                                    shape = RoundedCornerShape(10.dp),
+                                    color = if (isSelected) MaterialTheme.colorScheme.primaryContainer else MaterialTheme.colorScheme.surface,
+                                    border = if (isSelected) androidx.compose.foundation.BorderStroke(1.5.dp, MaterialTheme.colorScheme.primary) else androidx.compose.foundation.BorderStroke(1.dp, MaterialTheme.colorScheme.outline.copy(alpha = 0.4f)),
+                                    modifier = Modifier
+                                        .weight(1f)
+                                        .testTag("lang_quick_btn_$code")
+                                ) {
+                                    Box(
+                                        modifier = Modifier.padding(vertical = 8.dp),
+                                        contentAlignment = Alignment.Center
+                                    ) {
+                                        Text(
+                                            text = label,
+                                            style = MaterialTheme.typography.labelSmall,
+                                            fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium,
+                                            color = if (isSelected) MaterialTheme.colorScheme.onPrimaryContainer else MaterialTheme.colorScheme.onSurface,
+                                            maxLines = 1
+                                        )
+                                    }
+                                }
+                            }
+                        }
+
+                        Spacer(modifier = Modifier.height(10.dp))
+
+                        OutlinedButton(
+                            onClick = { showLanguageDialog = true },
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .testTag("open_all_languages_dialog_btn"),
+                            shape = RoundedCornerShape(12.dp)
+                        ) {
+                            Icon(Icons.Default.Language, contentDescription = null, modifier = Modifier.size(18.dp))
+                            Spacer(modifier = Modifier.width(6.dp))
+                            Text("Select from 68 Supported Languages…")
                         }
                     }
                 }
@@ -345,7 +451,12 @@ fun SettingsScreen(
                 // Custom Daily Data Transfer Volume Chart
                 DailyDataTransferChart(viewModel = viewModel)
 
-                // Network Diagnostics Card
+                // Firebase Free Services & Telemetry Card
+                val isFirebaseActive by viewModel.isFirebaseActive.collectAsStateWithLifecycle()
+                val firebaseEventsLog by viewModel.firebaseEventsLog.collectAsStateWithLifecycle()
+                val remoteConfigStatus by viewModel.remoteConfigStatus.collectAsStateWithLifecycle()
+                var testEventStatus by remember { mutableStateOf<String?>(null) }
+
                 Card(
                     modifier = Modifier.fillMaxWidth(),
                     shape = RoundedCornerShape(20.dp),
@@ -353,16 +464,145 @@ fun SettingsScreen(
                     colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.7f))
                 ) {
                     Column(modifier = Modifier.padding(16.dp)) {
-                        Text("Network Information", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
-                        Spacer(modifier = Modifier.height(8.dp))
-                        Text("Local IP: ${uiState.localIp}", style = MaterialTheme.typography.bodyMedium)
-                        Text("TCP Port: 8888", style = MaterialTheme.typography.bodyMedium)
-                        Text("UDP Discovery Port: 8889", style = MaterialTheme.typography.bodyMedium)
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Text("Firebase Services & Telemetry", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
+                            Surface(
+                                shape = RoundedCornerShape(8.dp),
+                                color = if (isFirebaseActive) MaterialTheme.colorScheme.primaryContainer else MaterialTheme.colorScheme.surface,
+                                border = androidx.compose.foundation.BorderStroke(1.dp, if (isFirebaseActive) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.outline)
+                            ) {
+                                Text(
+                                    text = if (isFirebaseActive) "● Active" else "○ Local Fallback",
+                                    style = MaterialTheme.typography.labelSmall,
+                                    color = if (isFirebaseActive) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant,
+                                    modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
+                                    fontWeight = FontWeight.Bold
+                                )
+                            }
+                        }
+
+                        Spacer(modifier = Modifier.height(10.dp))
+
+                        // Integrated Services Status Chips
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.spacedBy(6.dp)
+                        ) {
+                            listOf(
+                                "Analytics" to "📊 Live",
+                                "Crashlytics" to "🛡️ Ready",
+                                "Performance" to "⚡ Tracing",
+                                "RemoteConfig" to "⚙️ Synced"
+                            ).forEach { (service, badge) ->
+                                Surface(
+                                    shape = RoundedCornerShape(8.dp),
+                                    color = MaterialTheme.colorScheme.surface,
+                                    border = androidx.compose.foundation.BorderStroke(0.5.dp, MaterialTheme.colorScheme.outline.copy(alpha = 0.4f)),
+                                    modifier = Modifier.weight(1f)
+                                ) {
+                                    Column(
+                                        modifier = Modifier.padding(vertical = 6.dp, horizontal = 4.dp),
+                                        horizontalAlignment = Alignment.CenterHorizontally
+                                    ) {
+                                        Text(text = badge, style = MaterialTheme.typography.labelSmall, fontWeight = FontWeight.Bold)
+                                        Text(text = service, style = MaterialTheme.typography.labelSmall, fontSize = 10.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                                    }
+                                }
+                            }
+                        }
+
+                        Spacer(modifier = Modifier.height(10.dp))
+
+                        Text(
+                            text = "Remote Config: $remoteConfigStatus",
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+
+                        Spacer(modifier = Modifier.height(10.dp))
+
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.spacedBy(8.dp)
+                        ) {
+                            OutlinedButton(
+                                onClick = {
+                                    viewModel.testFirebaseDiagnostics()
+                                    testEventStatus = "Logged diagnostic event & test exception to Crashlytics"
+                                },
+                                modifier = Modifier
+                                    .weight(1f)
+                                    .testTag("test_firebase_diagnostic_button"),
+                                shape = RoundedCornerShape(12.dp)
+                            ) {
+                                Icon(Icons.Default.BugReport, contentDescription = null, modifier = Modifier.size(16.dp))
+                                Spacer(modifier = Modifier.width(4.dp))
+                                Text("Test Telemetry", fontSize = 12.sp)
+                            }
+
+                            OutlinedButton(
+                                onClick = {
+                                    viewModel.refreshRemoteConfig()
+                                    testEventStatus = "Triggered Remote Config refresh"
+                                },
+                                modifier = Modifier
+                                    .weight(1f)
+                                    .testTag("refresh_remote_config_button"),
+                                shape = RoundedCornerShape(12.dp)
+                            ) {
+                                Icon(Icons.Default.Refresh, contentDescription = null, modifier = Modifier.size(16.dp))
+                                Spacer(modifier = Modifier.width(4.dp))
+                                Text("Sync Config", fontSize = 12.sp)
+                            }
+                        }
+
+                        if (testEventStatus != null) {
+                            Spacer(modifier = Modifier.height(6.dp))
+                            Text(
+                                text = testEventStatus ?: "",
+                                style = MaterialTheme.typography.labelSmall,
+                                color = MaterialTheme.colorScheme.primary
+                            )
+                        }
+
+                        if (firebaseEventsLog.isNotEmpty()) {
+                            Spacer(modifier = Modifier.height(10.dp))
+                            Text("Recent Telemetry Events Stream:", style = MaterialTheme.typography.labelSmall, fontWeight = FontWeight.Bold)
+                            Spacer(modifier = Modifier.height(4.dp))
+                            Surface(
+                                shape = RoundedCornerShape(8.dp),
+                                color = MaterialTheme.colorScheme.surface.copy(alpha = 0.9f),
+                                border = androidx.compose.foundation.BorderStroke(0.5.dp, MaterialTheme.colorScheme.outline.copy(alpha = 0.3f)),
+                                modifier = Modifier.fillMaxWidth()
+                            ) {
+                                Column(modifier = Modifier.padding(8.dp)) {
+                                    firebaseEventsLog.take(4).forEach { entry ->
+                                        Text(
+                                            text = entry,
+                                            style = MaterialTheme.typography.labelSmall,
+                                            fontSize = 11.sp,
+                                            color = MaterialTheme.colorScheme.onSurface
+                                        )
+                                        Spacer(modifier = Modifier.height(2.dp))
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
 
-                // Data Management Card (with Auto-Archive Toggle)
-                val isAutoArchiveEnabled by viewModel.isAutoArchiveEnabled.collectAsStateWithLifecycle()
+                // Dynamic Firebase Remote Config Feature Flags Management
+                RemoteConfigFeatureControlCard(viewModel = viewModel)
+
+                // App Health & Diagnostics (Firebase Analytics & Crashlytics Integration)
+                AppHealthDiagnosticCard(viewModel = viewModel)
+
+                // Network & Subnet Diagnostics Card
+                val networkStatus by viewModel.networkStatus.collectAsStateWithLifecycle()
                 Card(
                     modifier = Modifier.fillMaxWidth(),
                     shape = RoundedCornerShape(20.dp),
@@ -370,8 +610,211 @@ fun SettingsScreen(
                     colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.7f))
                 ) {
                     Column(modifier = Modifier.padding(16.dp)) {
-                        Text("Data Management", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Text("Network & Wi-Fi Subnet", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
+                            Surface(
+                                shape = RoundedCornerShape(8.dp),
+                                color = if (networkStatus.isConnected) MaterialTheme.colorScheme.primaryContainer else MaterialTheme.colorScheme.errorContainer
+                            ) {
+                                Text(
+                                    text = if (networkStatus.isConnected) "● Connected" else "○ Offline",
+                                    style = MaterialTheme.typography.labelSmall,
+                                    color = if (networkStatus.isConnected) MaterialTheme.colorScheme.onPrimaryContainer else MaterialTheme.colorScheme.onErrorContainer,
+                                    modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
+                                    fontWeight = FontWeight.Bold
+                                )
+                            }
+                        }
+                        Spacer(modifier = Modifier.height(8.dp))
+                        Text("Active Interface: ${networkStatus.networkName}", style = MaterialTheme.typography.bodyMedium)
+                        Text("Local IP Address: ${networkStatus.localIp}", style = MaterialTheme.typography.bodyMedium)
+                        Text("Local Subnet: ${networkStatus.subnetPrefix}.*", style = MaterialTheme.typography.bodyMedium)
+                        Text("P2P Ports: TCP 8888 (Messaging/Files) • UDP 8889 (Discovery)", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                        
+                        Spacer(modifier = Modifier.height(8.dp))
+                        OutlinedButton(
+                            onClick = { viewModel.triggerDiscoveryRefresh() },
+                            modifier = Modifier.testTag("rescan_network_settings_btn"),
+                            shape = RoundedCornerShape(10.dp)
+                        ) {
+                            Icon(Icons.Default.Refresh, contentDescription = null, modifier = Modifier.size(16.dp))
+                            Spacer(modifier = Modifier.width(6.dp))
+                            Text("Re-scan Local Subnet Peers")
+                        }
+                    }
+                }
+
+                // WorkManager Background Sync Persistence Card
+                val isBackgroundSyncEnabled by viewModel.isBackgroundSyncEnabled.collectAsStateWithLifecycle()
+                val lastBackgroundSync by viewModel.lastBackgroundSync.collectAsStateWithLifecycle()
+                var syncFeedbackMsg by remember { mutableStateOf<String?>(null) }
+
+                Card(
+                    modifier = Modifier.fillMaxWidth(),
+                    shape = RoundedCornerShape(20.dp),
+                    border = androidx.compose.foundation.BorderStroke(1.dp, MaterialTheme.colorScheme.outline),
+                    colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.7f))
+                ) {
+                    Column(modifier = Modifier.padding(16.dp)) {
+                        Text("WorkManager Background Sync", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
+                        Spacer(modifier = Modifier.height(4.dp))
+                        Text(
+                            "Persists P2P presence discovery in the background and delivers queued scheduled messages while respecting battery constraints.",
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
                         Spacer(modifier = Modifier.height(12.dp))
+
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Column(modifier = Modifier.weight(1f)) {
+                                Text("Background P2P Sync Handler", style = MaterialTheme.typography.bodyLarge, fontWeight = FontWeight.SemiBold)
+                                Text(
+                                    text = if (lastBackgroundSync != null) "Last sync: $lastBackgroundSync" else "Periodic sync scheduled every 15 min",
+                                    style = MaterialTheme.typography.bodySmall,
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                                )
+                            }
+                            Switch(
+                                checked = isBackgroundSyncEnabled,
+                                onCheckedChange = { viewModel.setBackgroundSyncEnabled(it) },
+                                modifier = Modifier.testTag("background_sync_switch")
+                            )
+                        }
+
+                        if (isBackgroundSyncEnabled) {
+                            Spacer(modifier = Modifier.height(8.dp))
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                horizontalArrangement = Arrangement.SpaceBetween,
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                OutlinedButton(
+                                    onClick = {
+                                        viewModel.triggerImmediateBackgroundSync()
+                                        syncFeedbackMsg = "Triggered expedited background sync worker"
+                                    },
+                                    modifier = Modifier.testTag("trigger_background_sync_btn"),
+                                    shape = RoundedCornerShape(10.dp)
+                                ) {
+                                    Icon(Icons.Default.Refresh, contentDescription = null, modifier = Modifier.size(16.dp))
+                                    Spacer(modifier = Modifier.width(6.dp))
+                                    Text("Trigger Sync Now", style = MaterialTheme.typography.labelMedium)
+                                }
+                                if (syncFeedbackMsg != null) {
+                                    Text(
+                                        text = syncFeedbackMsg ?: "",
+                                        style = MaterialTheme.typography.labelSmall,
+                                        color = MaterialTheme.colorScheme.primary
+                                    )
+                                }
+                            }
+                        }
+                    }
+                }
+
+                // Data Management Card (with Auto-Purge & Auto-Archive)
+                val isAutoArchiveEnabled by viewModel.isAutoArchiveEnabled.collectAsStateWithLifecycle()
+                val autoPurgeDuration by viewModel.autoPurgeDuration.collectAsStateWithLifecycle()
+                val coroutineScope = rememberCoroutineScope()
+                var purgeCountInfo by remember { mutableStateOf<String?>(null) }
+
+                Card(
+                    modifier = Modifier.fillMaxWidth(),
+                    shape = RoundedCornerShape(20.dp),
+                    border = androidx.compose.foundation.BorderStroke(1.dp, MaterialTheme.colorScheme.outline),
+                    colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.7f))
+                ) {
+                    Column(modifier = Modifier.padding(16.dp)) {
+                        Text("Data Management & Retention", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
+                        Spacer(modifier = Modifier.height(12.dp))
+
+                        // Auto-Purge Setting
+                        Text("Auto-Purge Expired Messages", style = MaterialTheme.typography.bodyLarge, fontWeight = FontWeight.SemiBold)
+                        Text(
+                            "Automatically delete local messages older than the selected retention window for increased privacy.",
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                        Spacer(modifier = Modifier.height(8.dp))
+
+                        val purgeOptions = listOf(
+                            "OFF" to "Off",
+                            "24_HOURS" to "24 Hours",
+                            "7_DAYS" to "7 Days",
+                            "30_DAYS" to "30 Days",
+                            "90_DAYS" to "90 Days"
+                        )
+
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.spacedBy(6.dp)
+                        ) {
+                            purgeOptions.forEach { (key, label) ->
+                                val isSelected = autoPurgeDuration == key
+                                Surface(
+                                    onClick = {
+                                        viewModel.setAutoPurgeDuration(key)
+                                        purgeCountInfo = null
+                                    },
+                                    shape = RoundedCornerShape(10.dp),
+                                    color = if (isSelected) MaterialTheme.colorScheme.primaryContainer else MaterialTheme.colorScheme.surface,
+                                    border = if (isSelected) androidx.compose.foundation.BorderStroke(1.5.dp, MaterialTheme.colorScheme.primary) else androidx.compose.foundation.BorderStroke(1.dp, MaterialTheme.colorScheme.outline.copy(alpha = 0.4f)),
+                                    modifier = Modifier
+                                        .weight(1f)
+                                        .testTag("purge_option_$key")
+                                ) {
+                                    Box(
+                                        modifier = Modifier.padding(vertical = 8.dp),
+                                        contentAlignment = Alignment.Center
+                                    ) {
+                                        Text(
+                                            text = label,
+                                            style = MaterialTheme.typography.labelSmall,
+                                            fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal,
+                                            color = if (isSelected) MaterialTheme.colorScheme.onPrimaryContainer else MaterialTheme.colorScheme.onSurface
+                                        )
+                                    }
+                                }
+                            }
+                        }
+
+                        if (autoPurgeDuration != "OFF") {
+                            Spacer(modifier = Modifier.height(8.dp))
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                horizontalArrangement = Arrangement.SpaceBetween,
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                TextButton(
+                                    onClick = {
+                                        coroutineScope.launch {
+                                            val deleted = viewModel.purgeOldMessages(autoPurgeDuration)
+                                            purgeCountInfo = "Purged $deleted message(s) older than selected period."
+                                        }
+                                    },
+                                    modifier = Modifier.testTag("run_purge_now_button")
+                                ) {
+                                    Text("Purge Now (${purgeOptions.find { it.first == autoPurgeDuration }?.second})", style = MaterialTheme.typography.labelMedium)
+                                }
+                                if (purgeCountInfo != null) {
+                                    Text(
+                                        text = purgeCountInfo ?: "",
+                                        style = MaterialTheme.typography.labelSmall,
+                                        color = MaterialTheme.colorScheme.primary
+                                    )
+                                }
+                            }
+                        }
+
+                        HorizontalDivider(modifier = Modifier.padding(vertical = 12.dp))
                         
                         // Auto Archive Toggle
                         Row(
@@ -446,6 +889,16 @@ fun SettingsScreen(
             onPeerScanned = { ip, name ->
                 viewModel.addManualPeer(ip, name)
             }
+        )
+    }
+
+    if (showLanguageDialog) {
+        LanguageSelectionDialog(
+            currentLanguage = appLanguage,
+            onSelectLanguage = { code ->
+                viewModel.setAppLanguage(code)
+            },
+            onDismiss = { showLanguageDialog = false }
         )
     }
 }
@@ -650,4 +1103,172 @@ private fun formatSize(bytes: Long): String {
     val units = listOf("B", "KB", "MB", "GB", "TB")
     val digitGroups = (Math.log10(bytes.toDouble()) / Math.log10(1024.0)).toInt()
     return String.format(java.util.Locale.US, "%.1f %s", bytes / Math.pow(1024.0, digitGroups.toDouble()), units[digitGroups])
+}
+
+val ALL_LANGUAGES = listOf(
+    "SYSTEM" to ("Auto Select (System Default)" to "Auto select language after device system language"),
+    "af" to ("Afrikaans" to "Afrikaans"),
+    "am" to ("Amharic" to "አማርኛ"),
+    "ar" to ("Arabic" to "العربية"),
+    "az" to ("Azerbaijani" to "Azərbaycan"),
+    "bg" to ("Bulgarian" to "Български"),
+    "bn" to ("Bengali" to "বাংলা"),
+    "bs" to ("Bosnian" to "Bosanski"),
+    "ca" to ("Catalan" to "Català"),
+    "cs" to ("Czech" to "Čeština"),
+    "da" to ("Danish" to "Dansk"),
+    "de" to ("German" to "Deutsch"),
+    "el" to ("Greek" to "Ελληνικά"),
+    "en" to ("English" to "English"),
+    "es" to ("Spanish" to "Español"),
+    "et" to ("Estonian" to "Eesti"),
+    "fa" to ("Persian" to "فارسی"),
+    "fi" to ("Finnish" to "Suomi"),
+    "fr" to ("French" to "Français"),
+    "gl" to ("Galician" to "Galego"),
+    "gu" to ("Gujarati" to "ગુજરાતી"),
+    "he" to ("Hebrew" to "עברית"),
+    "hi" to ("Hindi" to "हिन्दी"),
+    "hr" to ("Croatian" to "Hrvatski"),
+    "hu" to ("Hungarian" to "Magyar"),
+    "hy" to ("Armenian" to "Հայերեն"),
+    "id" to ("Indonesian" to "Bahasa Indonesia"),
+    "is" to ("Icelandic" to "Íslenska"),
+    "it" to ("Italian" to "Italiano"),
+    "ja" to ("Japanese" to "日本語"),
+    "ka" to ("Georgian" to "ქართული"),
+    "km" to ("Khmer" to "ភាសាខ្មែរ"),
+    "kn" to ("Kannada" to "ಕನ್ನಡ"),
+    "ko" to ("Korean" to "한국어"),
+    "ky" to ("Kyrgyz" to "Кыргызча"),
+    "lo" to ("Lao" to "ພາສາລາວ"),
+    "lt" to ("Lithuanian" to "Lietuvių"),
+    "lv" to ("Latvian" to "Latviešu"),
+    "mk" to ("Macedonian" to "Македонски"),
+    "ml" to ("Malayalam" to "മലയാളം"),
+    "mn" to ("Mongolian" to "Монгол"),
+    "mr" to ("Marathi" to "मराठी"),
+    "ms" to ("Malay" to "Bahasa Melayu"),
+    "my" to ("Burmese" to "မြန်မာဘာသာ"),
+    "nb" to ("Norwegian" to "Norsk Bokmål"),
+    "ne" to ("Nepali" to "नेपाली"),
+    "nl" to ("Dutch" to "Nederlands"),
+    "pa" to ("Punjabi" to "ਪੰਜਾਬੀ"),
+    "pl" to ("Polish" to "Polski"),
+    "pt" to ("Portuguese" to "Português"),
+    "ro" to ("Romanian" to "Română"),
+    "ru" to ("Russian" to "Русский"),
+    "si" to ("Sinhala" to "සිංහල"),
+    "sk" to ("Slovak" to "Slovenčina"),
+    "sl" to ("Slovenian" to "Slovenščina"),
+    "sq" to ("Albanian" to "Shqip"),
+    "sr" to ("Serbian" to "Српски"),
+    "sv" to ("Swedish" to "Svenska"),
+    "sw" to ("Swahili" to "Kiswahili"),
+    "ta" to ("Tamil" to "தமிழ்"),
+    "te" to ("Telugu" to "తెలుగు"),
+    "th" to ("Thai" to "ไทย"),
+    "tl" to ("Tagalog / Filipino" to "Filipino"),
+    "tr" to ("Turkish" to "Türkçe"),
+    "uk" to ("Ukrainian" to "Українська"),
+    "ur" to ("Urdu" to "اردو"),
+    "uz" to ("Uzbek" to "Oʻzbekcha"),
+    "vi" to ("Vietnamese" to "Tiếng Việt"),
+    "zh" to ("Chinese" to "中文")
+)
+
+@Composable
+fun LanguageSelectionDialog(
+    currentLanguage: String,
+    onSelectLanguage: (String) -> Unit,
+    onDismiss: () -> Unit
+) {
+    var searchQuery by remember { mutableStateOf("") }
+    val filteredLanguages = remember(searchQuery) {
+        if (searchQuery.isBlank()) {
+            ALL_LANGUAGES
+        } else {
+            ALL_LANGUAGES.filter {
+                it.first.contains(searchQuery, ignoreCase = true) ||
+                it.second.first.contains(searchQuery, ignoreCase = true) ||
+                it.second.second.contains(searchQuery, ignoreCase = true)
+            }
+        }
+    }
+
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = {
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Icon(Icons.Default.Language, contentDescription = null, tint = MaterialTheme.colorScheme.primary)
+                Spacer(modifier = Modifier.width(8.dp))
+                Text("Select App Language", fontWeight = FontWeight.Bold)
+            }
+        },
+        text = {
+            Column(modifier = Modifier.fillMaxWidth().heightIn(max = 420.dp)) {
+                OutlinedTextField(
+                    value = searchQuery,
+                    onValueChange = { searchQuery = it },
+                    placeholder = { Text("Search 68 languages...") },
+                    leadingIcon = { Icon(Icons.Default.Search, contentDescription = null) },
+                    singleLine = true,
+                    modifier = Modifier.fillMaxWidth().testTag("language_search_input")
+                )
+                Spacer(modifier = Modifier.height(12.dp))
+                androidx.compose.foundation.lazy.LazyColumn(
+                    modifier = Modifier.weight(1f),
+                    verticalArrangement = Arrangement.spacedBy(4.dp)
+                ) {
+                    items(filteredLanguages.size) { index ->
+                        val (code, names) = filteredLanguages[index]
+                        val (englishName, nativeName) = names
+                        val isSelected = currentLanguage == code
+
+                        Surface(
+                            onClick = {
+                                onSelectLanguage(code)
+                                onDismiss()
+                            },
+                            shape = RoundedCornerShape(10.dp),
+                            color = if (isSelected) MaterialTheme.colorScheme.primaryContainer else MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.4f),
+                            modifier = Modifier.fillMaxWidth().testTag("lang_item_$code")
+                        ) {
+                            Row(
+                                modifier = Modifier.padding(horizontal = 12.dp, vertical = 10.dp),
+                                horizontalArrangement = Arrangement.SpaceBetween,
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Column(modifier = Modifier.weight(1f)) {
+                                    Text(
+                                        text = nativeName,
+                                        style = MaterialTheme.typography.bodyMedium,
+                                        fontWeight = if (isSelected) FontWeight.Bold else FontWeight.SemiBold,
+                                        color = if (isSelected) MaterialTheme.colorScheme.onPrimaryContainer else MaterialTheme.colorScheme.onSurface
+                                    )
+                                    Text(
+                                        text = if (code == "SYSTEM") "Auto select language after system settings" else "$englishName ($code)",
+                                        style = MaterialTheme.typography.bodySmall,
+                                        color = if (isSelected) MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.8f) else MaterialTheme.colorScheme.onSurfaceVariant
+                                    )
+                                }
+                                if (isSelected) {
+                                    Text(
+                                        text = "✓",
+                                        fontWeight = FontWeight.Bold,
+                                        color = MaterialTheme.colorScheme.primary
+                                    )
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        confirmButton = {
+            TextButton(onClick = onDismiss) {
+                Text(stringResource(R.string.close))
+            }
+        }
+    )
 }

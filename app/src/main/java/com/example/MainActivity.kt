@@ -21,8 +21,33 @@ class MainActivity : ComponentActivity() {
         handleIntent(intent)
         setContent {
             val themeMode by viewModel.themeMode.collectAsStateWithLifecycle()
-            MyApplicationTheme(themeMode = themeMode) {
-                P2PChatNavGraph(viewModel = viewModel)
+            val remoteAccentColor by viewModel.remoteAccentColor.collectAsStateWithLifecycle()
+            val appLanguage by viewModel.appLanguage.collectAsStateWithLifecycle()
+            val context = androidx.compose.ui.platform.LocalContext.current
+
+            val currentLocale = androidx.compose.runtime.remember(appLanguage) {
+                if (appLanguage == "SYSTEM" || appLanguage.isEmpty()) {
+                    java.util.Locale.getDefault()
+                } else {
+                    java.util.Locale.forLanguageTag(appLanguage)
+                }
+            }
+
+            val localizedContext = androidx.compose.runtime.remember(context, currentLocale) {
+                val config = android.content.res.Configuration(context.resources.configuration)
+                config.setLocale(currentLocale)
+                context.createConfigurationContext(config)
+            }
+
+            androidx.compose.runtime.CompositionLocalProvider(
+                androidx.compose.ui.platform.LocalContext provides localizedContext
+            ) {
+                MyApplicationTheme(
+                    themeMode = themeMode,
+                    accentColorHex = remoteAccentColor
+                ) {
+                    P2PChatNavGraph(viewModel = viewModel)
+                }
             }
         }
     }

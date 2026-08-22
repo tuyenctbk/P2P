@@ -1,5 +1,6 @@
 package com.example.ui
 
+import androidx.compose.animation.core.animateFloat
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -14,6 +15,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
+
+import androidx.compose.ui.res.stringResource
+import com.example.R
 
 @Composable
 fun QrScannerDialog(
@@ -42,17 +46,29 @@ fun QrScannerDialog(
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Icon(Icons.Default.QrCodeScanner, contentDescription = null, tint = MaterialTheme.colorScheme.primary)
                     Spacer(modifier = Modifier.width(8.dp))
-                    Text("Scan Peer QR Code", style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Bold)
+                    Text(stringResource(R.string.qr_scanner_title), style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Bold)
                 }
 
                 Text(
-                    text = "Scan or paste a peer's connection code to add them instantly.",
+                    text = stringResource(R.string.qr_scanner_subtitle),
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     textAlign = TextAlign.Center
                 )
 
-                // Simulated camera scanner viewbox
+                // Simulated camera scanner viewbox with animated laser line
+                val infiniteTransition = androidx.compose.animation.core.rememberInfiniteTransition(label = "scanner_laser")
+                val scanOffsetY by infiniteTransition.animateFloat(
+                    initialValue = 0.1f,
+                    targetValue = 0.9f,
+                    animationSpec = androidx.compose.animation.core.infiniteRepeatable(
+                        animation = androidx.compose.animation.core.tween(1800, easing = androidx.compose.animation.core.LinearEasing),
+                        repeatMode = androidx.compose.animation.core.RepeatMode.Reverse
+                    ),
+                    label = "laser_y"
+                )
+                val primaryColor = MaterialTheme.colorScheme.primary
+
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -60,6 +76,17 @@ fun QrScannerDialog(
                         .background(MaterialTheme.colorScheme.surfaceVariant, RoundedCornerShape(16.dp)),
                     contentAlignment = Alignment.Center
                 ) {
+                    androidx.compose.foundation.Canvas(modifier = Modifier.fillMaxSize()) {
+                        val laserY = size.height * scanOffsetY
+                        drawLine(
+                            color = primaryColor,
+                            start = androidx.compose.ui.geometry.Offset(16.dp.toPx(), laserY),
+                            end = androidx.compose.ui.geometry.Offset(size.width - 16.dp.toPx(), laserY),
+                            strokeWidth = 3.dp.toPx(),
+                            cap = androidx.compose.ui.graphics.StrokeCap.Round
+                        )
+                    }
+
                     Column(horizontalAlignment = Alignment.CenterHorizontally) {
                         Icon(
                             Icons.Default.QrCodeScanner,

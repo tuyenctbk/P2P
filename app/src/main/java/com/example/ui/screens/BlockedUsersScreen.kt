@@ -21,6 +21,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.compose.ui.res.stringResource
+import com.example.R
 import com.example.data.ChatPeer
 import com.example.viewmodel.ChatViewModel
 
@@ -38,7 +40,7 @@ fun BlockedUsersScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Blocked Users", fontWeight = FontWeight.Bold) },
+                title = { Text(stringResource(R.string.blocked_users_title), fontWeight = FontWeight.Bold) },
                 navigationIcon = {
                     IconButton(
                         onClick = onNavigateBack,
@@ -93,14 +95,14 @@ fun BlockedUsersScreen(
                     }
                     Spacer(modifier = Modifier.height(16.dp))
                     Text(
-                        text = "No Blocked Users",
+                        text = stringResource(R.string.no_blocked_users),
                         style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.Bold,
                         color = MaterialTheme.colorScheme.onSurface
                     )
                     Spacer(modifier = Modifier.height(6.dp))
                     Text(
-                        text = "Your connection circle is clean and healthy! Peers you block will appear here.",
+                        text = stringResource(R.string.no_blocked_users_desc),
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                         textAlign = TextAlign.Center
@@ -113,7 +115,7 @@ fun BlockedUsersScreen(
                         .padding(16.dp)
                 ) {
                     Text(
-                        text = "Manage Blocked Connections (${blockedPeers.size})",
+                        text = stringResource(R.string.manage_blocked_connections, blockedPeers.size),
                         style = MaterialTheme.typography.labelMedium,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                         modifier = Modifier.padding(bottom = 12.dp)
@@ -167,11 +169,11 @@ fun BlockedUsersScreen(
                                     ) {
                                         Icon(
                                             imageVector = Icons.Default.LockOpen,
-                                            contentDescription = "Unblock",
+                                            contentDescription = stringResource(R.string.unblock),
                                             modifier = Modifier.size(16.dp)
                                         )
                                         Spacer(modifier = Modifier.width(6.dp))
-                                        Text("Unblock", style = MaterialTheme.typography.labelMedium)
+                                        Text(stringResource(R.string.unblock), style = MaterialTheme.typography.labelMedium)
                                     }
                                 }
                             }

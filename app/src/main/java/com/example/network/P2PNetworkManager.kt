@@ -3,6 +3,7 @@ package com.example.network
 import android.content.Context
 import android.net.wifi.WifiManager
 import android.util.Log
+import com.example.util.P2PExceptionHandler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -101,8 +102,35 @@ class P2PNetworkManager(private val context: Context) {
 
     private val _blockedPeers = MutableStateFlow<Set<String>>(emptySet())
 
+    val bleDiscoveryManager = BleDiscoveryManager(context)
+    val blePeers: StateFlow<Map<String, BleDiscoveredPeer>> = bleDiscoveryManager.blePeers
+    val bleFallbackStatus: StateFlow<String> = bleDiscoveryManager.fallbackStatus
+
     fun setBlockedPeers(peers: Set<String>) {
         _blockedPeers.value = peers
+    }
+
+    fun startBleFallbackDiscovery(myName: String) {
+        bleDiscoveryManager.startBleAdvertising(myName, _localIp.value)
+        bleDiscoveryManager.startBleScanning { ip, name ->
+            registerDiscoveredPeer(ip, name, "BLE_NEARBY")
+        }
+    }
+
+    fun registerDiscoveredPeer(ip: String, name: String, source: String = "MANUAL") {
+        if (_blockedPeers.value.contains(ip)) return
+        val currentPeers = _discoveredPeers.value.toMutableMap()
+        currentPeers[ip] = name
+        _discoveredPeers.value = currentPeers
+
+        val presenceMap = _peerPresence.value.toMutableMap()
+        presenceMap[ip] = PeerPresenceInfo(
+            ip = ip,
+            name = name,
+            presenceState = "ONLINE",
+            lastSeen = System.currentTimeMillis()
+        )
+        _peerPresence.value = presenceMap
     }
 
     private var lastBytesSent = 0L
@@ -314,6 +342,15 @@ class P2PNetworkManager(private val context: Context) {
                 }
             } catch (e: Exception) {
                 Log.w("P2PNetwork", "Attempt $attempts failed for $targetIp, retrying...", e)
+                if (attempts >= maxAttempts) {
+                    P2PExceptionHandler.recordSocketFailure(
+                        throwable = e,
+                        targetIp = targetIp,
+                        port = PORT,
+                        action = "SEND_MESSAGE",
+                        payloadSize = text.length + attachmentData.length
+                    )
+                }
                 if (attempts < maxAttempts) {
                     kotlinx.coroutines.delay(300)
                 }
@@ -459,6 +496,7 @@ class P2PNetworkManager(private val context: Context) {
                 }
             } catch (e: Exception) {
                 Log.e("P2PNetwork", "UDP Discovery error", e)
+                P2PExceptionHandler.recordUdpDiscoveryFailure(e, UDP_PORT, "LISTENER_LOOP")
                 isUdpRunning = false
             }
         }
@@ -467,6 +505,7 @@ class P2PNetworkManager(private val context: Context) {
     private var beaconThrottleCount = 0
 
     fun broadcastPresence(myName: String, state: String = "ONLINE") {
+        startBleFallbackDiscovery(myName)
         if (_isBatteryThrottled.value) {
             beaconThrottleCount++
             // In battery throttled mode, only send beacon every 3rd attempt to reduce socket activity

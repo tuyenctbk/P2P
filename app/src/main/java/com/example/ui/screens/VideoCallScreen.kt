@@ -21,6 +21,8 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.res.stringResource
+import com.example.R
 import kotlinx.coroutines.delay
 
 @Composable
@@ -96,7 +98,7 @@ fun VideoCallScreen(
                 )
                 Spacer(modifier = Modifier.height(4.dp))
                 Text(
-                    text = "Peer IP: $peerAddress",
+                    text = stringResource(R.string.peer_ip, peerAddress),
                     style = MaterialTheme.typography.bodyMedium,
                     color = Color.White.copy(alpha = 0.7f)
                 )
@@ -117,7 +119,7 @@ fun VideoCallScreen(
                         )
                         Spacer(modifier = Modifier.width(6.dp))
                         Text(
-                            text = "HD 60FPS • 0% Packet Loss",
+                            text = stringResource(R.string.call_quality),
                             style = MaterialTheme.typography.labelSmall,
                             color = Color.Green
                         )
@@ -146,7 +148,7 @@ fun VideoCallScreen(
                     Icon(Icons.Default.Lock, contentDescription = null, tint = Color.Green, modifier = Modifier.size(14.dp))
                     Spacer(modifier = Modifier.width(6.dp))
                     Text(
-                        text = "E2E P2P SECURED",
+                        text = stringResource(R.string.e2e_secured),
                         style = MaterialTheme.typography.labelSmall,
                         color = Color.White,
                         fontWeight = FontWeight.Bold
@@ -195,7 +197,7 @@ fun VideoCallScreen(
                     Column(horizontalAlignment = Alignment.CenterHorizontally) {
                         Icon(Icons.Default.Person, contentDescription = null, tint = Color.White.copy(alpha = 0.8f), modifier = Modifier.size(36.dp))
                         Spacer(modifier = Modifier.height(4.dp))
-                        Text("You (Camera)", style = MaterialTheme.typography.labelSmall, color = Color.White.copy(alpha = 0.7f))
+                        Text(stringResource(R.string.you_camera), style = MaterialTheme.typography.labelSmall, color = Color.White.copy(alpha = 0.7f))
                     }
                 }
             }
@@ -229,7 +231,7 @@ fun VideoCallScreen(
                 ) {
                     Icon(
                         imageVector = if (isMuted) Icons.Default.MicOff else Icons.Default.Mic,
-                        contentDescription = "Mute",
+                        contentDescription = stringResource(R.string.mute),
                         tint = Color.White
                     )
                 }
@@ -245,7 +247,7 @@ fun VideoCallScreen(
                 ) {
                     Icon(
                         imageVector = if (isVideoOff) Icons.Default.VideocamOff else Icons.Default.Videocam,
-                        contentDescription = "Video",
+                        contentDescription = stringResource(R.string.video),
                         tint = Color.White
                     )
                 }
@@ -261,7 +263,7 @@ fun VideoCallScreen(
                 ) {
                     Icon(
                         imageVector = if (isSpeakerOn) Icons.AutoMirrored.Filled.VolumeUp else Icons.Default.PhoneInTalk,
-                        contentDescription = "Speaker",
+                        contentDescription = stringResource(R.string.speaker),
                         tint = Color.White
                     )
                 }
@@ -277,7 +279,7 @@ fun VideoCallScreen(
                 ) {
                     Icon(
                         imageVector = Icons.Default.CallEnd,
-                        contentDescription = "End Call",
+                        contentDescription = stringResource(R.string.end_call),
                         tint = Color.White
                     )
                 }
